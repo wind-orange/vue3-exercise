@@ -1,0 +1,87 @@
+// 设置滚动条的宽高
+::-webkit-scrollbar{
+  width: 8px;
+  height: 8px;
+}
+
+// 设置滚动条的轨道样式
+::-webkit-scrollbar-track{
+  background: rgb(239, 239, 239);
+  border-radius: 2px;
+}
+
+// 设置滚动条的滑块样式
+::-webkit-scrollbar-thumb{
+  background: #bfbfbf;
+  border-radius: 10px;
+}
+
+// 设置滑块在鼠标悬停时和滚动条角落的样式
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-corner{
+  background: #bfbfbf;
+}
+
+// 定义一些常用颜色变量
+:root{
+  --text1:#9499A0;
+  --text2:#61666d;
+  --icon:#9499A0;
+  --text_link:#409eff;
+  --blue:#007fff;
+  --tag:#7BCDEF;
+  --pink:#FF6699;
+}
+
+// 重置整个文档的格式
+body{
+  margin: 0;
+  padding: 0;
+  color: #636d7e;
+  font-size: 14px;
+}
+
+// 给所有元素设置內减模式
+* {
+  box-sizing: border-box;
+}
+
+// 定义超链接样式
+.a-link{
+  text-decoration: none;
+  color: var(--blue);
+}
+
+// 顶部面板样式
+.top-panel{
+  // 顶部面板内超链接样式
+  a{
+    text-decoration: none;
+    color: var(--blue);
+    margin-right: 8px;
+  }
+  // 最后一个超链接移除右边距
+  a:last-child{
+    margin-right: 0;
+  }
+  // 一个禁止类
+  .not-allow{
+    cursor:not-allowed; // 鼠标光标为禁止操作
+    color: #ddd; // 设置不可用元素的文本颜色为灰色
+    text-decoration: none;
+  }
+}
+
+// 表格数据卡样式
+.table-data-card{
+  margin-top: 10px;
+  // 组件内部的主体样式
+  .el-card_body{
+    padding: 10px;
+  }
+}
+
+// 为具有此类元素设置宽度100%
+.el-form-item_content{
+  width: 100%;
+}
