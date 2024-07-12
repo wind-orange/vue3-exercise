@@ -12,5 +12,19 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  // 配置axios代理
+  server:{
+    hmr:true,
+    port:4000,
+    proxy:{
+      "/api":{
+        target:"http://localhost:9091",
+        changeOrigin:true,
+        pathRewrite:{
+          "^api":"/api"
+        }
+      }
+    }
   }
 })
