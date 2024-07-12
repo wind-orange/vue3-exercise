@@ -2,18 +2,25 @@
   <div class="login-body">
     <div class="left-bg"></div>
     <div class="right-panel">
-      <el-form class="login-form">
+      <el-form class="login-form" :model="formData" ref="formDataRef" :rules="rules" @submit.prevent>
         <div class="register">
           <div class="title">后台管理系统登录</div>
           <el-form-item prop="phone">
-            <el-input placeholder="请输入账号" size="large" clearable>
+            <el-input placeholder="请输入账号"
+            size="large" clearable
+            v-model.trim="formData.phone">
               <template #prefix>
                 <span class="iconfont icon-phone"></span>
               </template>
             </el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input placeholder="请输入密码" size="large" clearable>
+            <el-input placeholder="请输入密码"
+            size="large"
+            clearable
+            type="password"
+            show-password
+            v-model.trim="formData.password">
               <template #prefix>
                 <span class="iconfont icon-lock"></span>
               </template>
@@ -21,19 +28,22 @@
           </el-form-item>
           <el-form-item prop="checkCode">
             <div class="check-code-panel">
-              <el-input placeholder="请输入验证码" size="large" clearable>
+              <el-input placeholder="请输入验证码"
+              size="large"
+              clearable
+              v-model.trim="formData.checkCode">
                 <template #prefix>
                   <span class="iconfont icon-Safety"></span>
                 </template>
               </el-input>
-              <img class="check-code">
+              <img class="check-code" :src="checkCodeUrl" @click="changeCheckCode">
             </div>
           </el-form-item>
           <el-form-item prop="rememberMe">
-            <el-checkbox>记住我</el-checkbox>
+            <el-checkbox v-model="formData.rememberMe">记住我</el-checkbox>
           </el-form-item>
           <el-form-item prop="submit">
-            <el-button class="btn" size="large" type="primary">登录</el-button>
+            <el-button class="btn" size="large" type="primary" @click="doSubmit">登录</el-button>
           </el-form-item>
         </div>
       </el-form>
@@ -42,6 +52,32 @@
 </template>
     
 <script setup>
+import {nextTick, onMounted, ref} from 'vue'
+
+const formData = ref({})
+const formDataRef = ref()
+const rules = {
+  phone:[{required:true,message:"请输入账号"}],
+  password:[{required:true,message:"请输入密码"}],
+  checkCode:[{required:true,message:"请输入验证码"}],
+}
+// 验证码
+const api = {
+  checkCode:"/api/checkCode",
+  login:"/login"
+}
+const checkCodeUrl = ref(null)
+const changeCheckCode = () => {
+  checkCodeUrl.value = `${api.checkCode}?time=${new Date().getTime()}`
+}
+onMounted(() => init())
+const init = () => {
+  nextTick(() => {
+      changeCheckCode()
+    })
+}
+
+const doSubmit = () =>{}
 </script>
     
 <style lang="scss" scoped>
