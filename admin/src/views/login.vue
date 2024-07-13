@@ -52,7 +52,9 @@
 </template>
     
 <script setup>
-import {nextTick, onMounted, ref} from 'vue'
+import {getCurrentInstance, nextTick, onMounted, ref} from 'vue'
+import md5 from 'js-md5';
+const {proxy} = getCurrentInstance()
 
 const formData = ref({})
 const formDataRef = ref()
@@ -70,6 +72,21 @@ const checkCodeUrl = ref(null)
 const changeCheckCode = () => {
   checkCodeUrl.value = `${api.checkCode}?time=${new Date().getTime()}`
 }
+// 登录
+const doSubmit = () =>{
+  formDataRef.value.validate(async (valid) => {
+    if(!valid){return}
+    let parmas = {}
+    Object.assign(parmas,formData.value)
+    parmas.password = md5(parmas.password)
+    let result = await proxy.Request({
+      url:api.login,
+      parmas
+    })
+    if(!result){return}
+  })
+}
+
 onMounted(() => init())
 const init = () => {
   nextTick(() => {
@@ -77,7 +94,6 @@ const init = () => {
     })
 }
 
-const doSubmit = () =>{}
 </script>
     
 <style lang="scss" scoped>

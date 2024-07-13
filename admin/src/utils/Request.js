@@ -60,7 +60,7 @@ instance.interceptors.response.use(
 )
 
 const request = (config) => {
-  const {url,parmas,dataType,showLoading=ture} = config
+  const {url,parmas,dataType,showLoading=true} = config
   let contentType = contentTypeForm
   let formData = new FormData()
   for(let key in parmas){
