@@ -54,6 +54,8 @@
 <script setup>
 import {getCurrentInstance, nextTick, onMounted, ref} from 'vue'
 import md5 from 'js-md5';
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const {proxy} = getCurrentInstance()
 
 const formData = ref({})
@@ -101,6 +103,12 @@ const doSubmit = () =>{
       proxy.VueCookies.remove("loginInfo")
     }
     proxy.Message.success("登陆成功")
+    sessionStorage.setItem("userInfo",JSON.stringify(result.data))
+    let firstMenu = result.data.menuList[0]
+    if(firstMenu.children>0){
+      firstMenu = firstMenu.children[0]
+    }
+    router.push(firstMenu.menuUrl)
   })
 }
 
