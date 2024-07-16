@@ -78,19 +78,43 @@ const doSubmit = () =>{
     if(!valid){return}
     let parmas = {}
     Object.assign(parmas,formData.value)
-    parmas.password = md5(parmas.password)
+    let cookieLoginInfo = proxy.VueCookies.get("loginInfo")
+    let cookiePassword = cookieLoginInfo == null ? null : cookieLoginInfo.password
+    if(parmas.password!=cookiePassword){
+      parmas.password = md5(parmas.password)
+    }
     let result = await proxy.Request({
       url:api.login,
-      parmas
+      parmas,
+      errorCallback:()=>{changeCheckCode()}
     })
     if(!result){return}
+    // 记住我
+    if(parmas.rememberMe){
+      const loginInfo = {
+        phone:parmas.phone,
+        password:parmas.password,
+        rememberMe:parmas.rememberMe
+      }
+      proxy.VueCookies.set("loginInfo",loginInfo,"7d")
+    }else{
+      proxy.VueCookies.remove("loginInfo")
+    }
+    proxy.Message.success("登陆成功")
   })
 }
+
 
 onMounted(() => init())
 const init = () => {
   nextTick(() => {
       changeCheckCode()
+      formDataRef.value.resetFields()
+      formData.value = {}
+      const cookieLoginInfo = proxy.VueCookies.get("loginInfo")
+      if(cookieLoginInfo){
+        formData.value = cookieLoginInfo
+      }
     })
 }
 
