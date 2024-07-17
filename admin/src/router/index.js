@@ -10,7 +10,12 @@ const router = createRouter({
     },{
       path:'/',
       name:'框架',
-      component:() => import('../views/Lauout.vue')
+      component:() => import('../views/Lauout.vue'),
+      children:[{
+        path:'/home',
+        name:'首页',
+        component:() => import('../views/home/Home.vue')
+      },]
     }
   ]
 })
