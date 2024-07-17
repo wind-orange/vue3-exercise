@@ -7,8 +7,19 @@ const router = createRouter({
       path:'/login',
       name:'登录',
       component:() => import('../views/login.vue') // 懒加载
+    },{
+      path:'/',
+      name:'框架',
+      component:() => import('../views/Lauout.vue')
     }
   ]
 })
 
+router.beforeEach((to,from,next) => {
+  const userInfo = sessionStorage.getItem("userInfo")
+  if(!userInfo && to.path != "/login"){
+    router.push("/login")
+  }
+  next()
+})
 export default router
