@@ -6,11 +6,11 @@ const router = createRouter({
     {
       path:'/login',
       name:'登录',
-      component:() => import('../views/login.vue') // 懒加载
+      component:() => import('../views/Login.vue') // 懒加载
     },{
       path:'/',
       name:'框架',
-      component:() => import('../views/Lauout.vue'),
+      component:() => import('../views/Layout.vue'),
       children:[{
         path:'/home',
         name:'首页',
