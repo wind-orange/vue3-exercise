@@ -50,6 +50,7 @@
 import Dialog from "./Dialog.vue";
 import { ref, getCurrentInstance, nextTick } from "vue";
 const { proxy } = getCurrentInstance();
+// dialog配置
 const api = {
   updateMyPwd: "/updateMyPwd",
 };
@@ -66,9 +67,18 @@ const dialogConfig = ref({
     },
   ],
 });
-
+// 表单
 const formData = ref({});
 const formDataRef = ref();
+// 验证密码
+const checkPassword = (rule, value, callback) => {
+  if (value !== formData.value.password) {
+    callback(new Error(rule.message));
+  } else {
+    callback;
+  }
+};
+// 表单校验规则
 const rules = {
   password: [
     { required: true, message: "请输入密码" },

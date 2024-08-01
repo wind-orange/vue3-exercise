@@ -66,9 +66,11 @@
       </div>
     </div>
   </div>
+  <UpdatePwd ref="updateMyPwdRef"></UpdatePwd>
 </template>
 
 <script setup>
+import UpdatePwd from "@/components/UpdatePwd.vue";
 import { getCurrentInstance, nextTick, onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();

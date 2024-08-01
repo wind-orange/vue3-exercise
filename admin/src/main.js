@@ -11,6 +11,7 @@ import 'element-plus/dist/index.css'
 import Request from "@/utils/Request"
 import Message from "@/utils/Message"
 import Confirm from "@/utils/Confirm"
+import Verify from "@/utils/Verify"
 
 import VueCookies from "vue-cookies"
 
@@ -24,6 +25,7 @@ app.component("Dialog",Dialog)
 app.config.globalProperties.Request=Request
 app.config.globalProperties.Message=Message
 app.config.globalProperties.Confirm=Confirm
+app.config.globalProperties.Verify=Verify
 app.config.globalProperties.VueCookies=VueCookies
 
 app.mount('#app')
