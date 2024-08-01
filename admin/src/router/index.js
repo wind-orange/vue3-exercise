@@ -15,6 +15,10 @@ const router = createRouter({
         path:'/home',
         name:'首页',
         component:() => import('../views/home/Home.vue')
+      },{
+        path:'/content/category',
+        name:'分类管理',
+        component: () => import('../views/content/CategoryList.vue')
       },]
     }
   ]

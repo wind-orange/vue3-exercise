@@ -49,13 +49,61 @@
 
 <script setup>
 import { getCurrentInstance, nextTick, onMounted, ref } from "vue";
+import { useRouter,useRoute } from "vue-router";
+const router = useRouter()
+const route = useRoute()
 const userInfo = ref(JSON.parse(sessionStorage.getItem("userInfo")) || { menuList: [] })
+// 将菜单列表转换为对象进行存储
+const menuMap = ref({})
+const initMenuMap = () => {
+  const menuList = userInfo.value.menuList
+  // {key:[menuUrl],value:[menuItem]}
+  for(let p=0;p<menuList.length;p++){
+    const pMenu = menuList[p]
+    menuMap.value[pMenu.menuUrl] = pMenu
+    if(pMenu.children && pMenu.children.length>0){
+      // {key:[subUrl],value:[parentPath,subItem]}
+      for(let s=0;s<pMenu.children.length;s++){
+        const sub = pMenu.children[s]
+        sub['parentPath'] = pMenu.menuUrl
+        menuMap.value[sub.menuUrl] = sub
+      }
+    }
+  }
+}
+
+
 const currentPmenu = ref({})
 const currentSubMenu = ref({})
 
 const updateMyPwd = () => {}
 const logout = () => {}
-const jump = () => {}
+
+// 点击跳转到子菜单的第一个页面
+const pMenuClickHander = (data) =>{
+  currentPmenu.value = data
+  let firstSubMenu = data.children[0]
+  jump(firstSubMenu)
+}
+// 点击跳转
+const jump = (data) => {
+  if(currentSubMenu.value.menuUrl == data.menuUrl) return
+  currentSubMenu.value = data
+  router.push(data.menuUrl)
+}
+// 刷新保留页面
+const menuSelect = (curPath,addTab) => {
+  let curMenu = menuMap.value[curPath]
+  if(curMenu == null) return
+  currentPmenu.value = menuMap.value[curMenu.parentPath]
+  currentSubMenu.value = curMenu
+}
+
+onMounted(() => {
+  initMenuMap()
+  menuSelect(route.path,true)
+})
+
 </script>
 
 <style>
