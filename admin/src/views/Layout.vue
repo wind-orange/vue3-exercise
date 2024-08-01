@@ -44,9 +44,24 @@
         </div>
       </div>
       <div class="main-content">
-        <div class="tab-content"></div>
+        <div class="tab-content">
+          <el-tabs
+            type="border-card"
+            v-model="currentSubMenu.menuUrl"
+            @tab-click="tabClick"
+            @edit="editTab"
+          >
+            <el-tab-pane
+              :name="item.menuUrl"
+              :label="item.menuName"
+              :closable="tabList.length > 1"
+              v-for="item in tabList"
+            >
+            </el-tab-pane>
+          </el-tabs>
+        </div>
         <div class="body-content">
-          <Router-view></Router-view>
+          <router-view></router-view>
         </div>
       </div>
     </div>
@@ -61,6 +76,9 @@ const route = useRoute();
 const userInfo = ref(
   JSON.parse(sessionStorage.getItem("userInfo")) || { menuList: [] }
 );
+const updateMyPwd = () => {};
+const logout = () => {};
+
 // 将菜单列表转换为对象进行存储
 const menuMap = ref({});
 const initMenuMap = () => {
@@ -79,12 +97,9 @@ const initMenuMap = () => {
     }
   }
 };
-
+// 左侧菜单栏
 const currentPmenu = ref({});
 const currentSubMenu = ref({});
-
-const updateMyPwd = () => {};
-const logout = () => {};
 
 // 点击跳转到子菜单的第一个页面
 const pMenuClickHander = (data) => {
@@ -96,6 +111,7 @@ const pMenuClickHander = (data) => {
 const jump = (data) => {
   if (currentSubMenu.value.menuUrl == data.menuUrl) return;
   currentSubMenu.value = data;
+  addTabHander(data);
   router.push(data.menuUrl);
 };
 // 刷新保留页面
@@ -104,12 +120,51 @@ const menuSelect = (curPath, addTab) => {
   if (curMenu == null) return;
   currentPmenu.value = menuMap.value[curMenu.parentPath];
   currentSubMenu.value = curMenu;
+  if (addTab) addTabHander(curMenu);
 };
 
 onMounted(() => {
   initMenuMap();
   menuSelect(route.path, true);
 });
+
+// tab
+const tabList = ref([]);
+
+// 动态添加tab
+const addTabHander = (curMenu) => {
+  let currentTab = tabList.value.find((item) => {
+    return item.menuUrl == currentSubMenu.value.menuUrl;
+  });
+  if (!currentTab) {
+    tabList.value.push(curMenu);
+  }
+};
+// 点击tab跳转到相应页面
+const tabClick = (e) => {
+  const path = e.props.name;
+  menuSelect(path);
+  router.push(path);
+};
+// 删除tab
+const editTab = (targetKey, action) => {
+  if (action != "remove") return;
+  let curPath = currentSubMenu.value.menuUrl;
+  let tabs = tabList.value;
+  if (targetKey == curPath) {
+    tabs.forEach((tab, index) => {
+      if (tab.menuUrl === targetKey) {
+        let nextTab = tabs[index + 1] || tabs[index - 1];
+        if (nextTab) curPath = nextTab.menuUrl;
+      }
+    });
+  }
+  tabList.value = tabs.filter((tab) => tab.menuUrl != targetKey);
+  if (curPath != currentSubMenu.value.menuUrl) {
+    router.push(curPath);
+    menuSelect(curPath);
+  }
+};
 </script>
 
 <style>
