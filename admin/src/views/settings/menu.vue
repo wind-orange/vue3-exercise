@@ -103,11 +103,6 @@
         </el-col>
       </el-row>
     </div>
-    <MenuEdit
-      ref="menuEditRef"
-      :treeData="treeData"
-      @reload="loadTreeData"
-    ></MenuEdit>
   </div>
 </template>
 
