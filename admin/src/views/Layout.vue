@@ -73,11 +73,27 @@ import { getCurrentInstance, nextTick, onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
+const { proxy } = getCurrentInstance();
 const userInfo = ref(
   JSON.parse(sessionStorage.getItem("userInfo")) || { menuList: [] }
 );
-const updateMyPwd = () => {};
-const logout = () => {};
+// userinfo
+const updateMyPwdRef = ref()
+// 修改密码
+const updateMyPwd = () => {
+  updateMyPwdRef.value.show()
+};
+// 退出登录
+const logout = () => {
+  proxy.Confirm('确定要退出吗？',async()=>{
+    let result = await proxy.Request({
+      url:'/logout'
+    })
+    if(!result) return
+    sessionStorage.removeItem("userInfo")
+    router.push('/login')
+  })
+};
 
 // 将菜单列表转换为对象进行存储
 const menuMap = ref({});
