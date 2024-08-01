@@ -57,11 +57,11 @@
               :closable="tabList.length > 1"
               v-for="item in tabList"
             >
+              <div class="body-content">
+                <RouterView></RouterView>
+              </div>
             </el-tab-pane>
           </el-tabs>
-        </div>
-        <div class="body-content">
-          <router-view></router-view>
         </div>
       </div>
     </div>
@@ -72,7 +72,7 @@
 <script setup>
 import UpdatePwd from "@/components/UpdatePwd.vue";
 import { getCurrentInstance, nextTick, onMounted, ref } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter, useRoute, RouterView } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 const { proxy } = getCurrentInstance();
@@ -80,21 +80,21 @@ const userInfo = ref(
   JSON.parse(sessionStorage.getItem("userInfo")) || { menuList: [] }
 );
 // userinfo
-const updateMyPwdRef = ref()
+const updateMyPwdRef = ref();
 // 修改密码
 const updateMyPwd = () => {
-  updateMyPwdRef.value.show()
+  updateMyPwdRef.value.show();
 };
 // 退出登录
 const logout = () => {
-  proxy.Confirm('确定要退出吗？',async()=>{
+  proxy.Confirm("确定要退出吗？", async () => {
     let result = await proxy.Request({
-      url:'/logout'
-    })
-    if(!result) return
-    sessionStorage.removeItem("userInfo")
-    router.push('/login')
-  })
+      url: "/logout",
+    });
+    if (!result) return;
+    sessionStorage.removeItem("userInfo");
+    router.push("/login");
+  });
 };
 
 // 将菜单列表转换为对象进行存储
