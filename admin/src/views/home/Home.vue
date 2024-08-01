@@ -29,11 +29,13 @@
       </div>
       <div class="data-list">
         <el-row :gutter="10">
+          <!-- App下载 -->
           <el-col :span="12">
-            <div class="chart" ref="myCharts4AppWeekDataRef"></div>
+            <div class="chart" ref="myChartsAppWeekDataRef"></div>
           </el-col>
+          <!-- 内容统计 -->
           <el-col :span="12">
-            <div class="chart" ref="myCharts4ContentWeekDataRef"></div>
+            <div class="chart" ref="myChartsContentWeekDataRef"></div>
           </el-col>
         </el-row>
       </div>
@@ -41,7 +43,144 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import * as echarts from "echarts";
+import { ref, getCurrentInstance, nextTick, shallowRef } from "vue";
+const { proxy } = getCurrentInstance();
+const api = {
+  getAlldata: "/index/getAllData",
+  getAppWeekdata: "/index/getAppWeekData",
+  getContentWeekdata: "/index/getContentWeekData",
+};
+// 查询数据概括
+const allDataList = ref([]);
+// 获取所有数据
+const loadAllData = async () => {
+  let result = await proxy.Request({
+    url: api.getAlldata,
+  });
+  if (!result) return;
+  allDataList.value = result.data;
+};
+loadAllData();
+
+// charts配置
+const getOption = (title, xAxisData = [], seriesData = []) => {
+  return {
+    title: {
+      text: title,
+    },
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
+        textStyle: {
+          color: "red",
+        },
+      },
+    },
+    legend: {
+      x: 200,
+    },
+    grid: {
+      left: 50,
+      right: 0,
+    },
+    xAxis: {
+      axisLine: {
+        lineStyle: {
+          color: "#90979c",
+        },
+      },
+      data: xAxisData,
+      axisLabel: {
+        interval: 0,
+        rotate: "45",
+      },
+    },
+    yAxis: {
+      type: "value",
+    },
+    series: seriesData,
+  };
+};
+// 查询App下载
+const myChartsAppWeekDataRef = ref();
+const myChartsAppWeekData = shallowRef();
+const initAppWeekData = () => {
+  nextTick(() => {
+    myChartsAppWeekData.value = echarts.init(myChartsAppWeekDataRef.value);
+    loadAppWeekData();
+  });
+};
+initAppWeekData();
+
+const loadAppWeekData = async () => {
+  let result = await proxy.Request({
+    url: api.getAppWeekdata,
+  });
+  if (!result) {
+    return;
+  }
+  const data = result.data;
+  console.log(data);
+  const xAxisData = data.dateList;
+  const seriesData = [];
+  const colors = ["#1b9cfc", "#67c23a"];
+  data.itemDataList.forEach((item, index) => {
+    seriesData.push({
+      name: item.statisticsName,
+      type: "bar",
+      smooth: true,
+      data: item.listData,
+      itemStyle: {
+        color: colors[index],
+      },
+    });
+  });
+  myChartsAppWeekData.value.setOption(
+    getOption("App下载注册用户统计", xAxisData, seriesData)
+  );
+};
+// 内容统计
+const myChartsContentWeekDataRef = ref();
+const myChartsContentWeekData = shallowRef();
+const initContentWeekData = () => {
+  nextTick(() => {
+    myChartsContentWeekData.value = echarts.init(myChartsContentWeekDataRef.value);
+    loadContentWeekData();
+  });
+};
+initContentWeekData();
+
+const loadContentWeekData = async () => {
+  let result = await proxy.Request({
+    url: api.getAppWeekdata,
+  });
+  if (!result) {
+    return;
+  }
+  const data = result.data;
+  console.log(data);
+  const xAxisData = data.dateList;
+  const seriesData = [];
+  const colors = ["#1b9cfc", "#67c23a", "#33166e", "#fb7993", "#a4c4fc"];
+  data.itemDataList.forEach((item, index) => {
+    seriesData.push({
+      name: item.statisticsName,
+      type: "bar",
+      smooth: true,
+      data: item.listData,
+      itemStyle: {
+        color: colors[index],
+      },
+    });
+  });
+  myChartsContentWeekData.value.setOption(
+    getOption("App下载注册用户统计", xAxisData, seriesData)
+  );
+};
+</script>
 
 <style lang="scss">
 .card-title {
