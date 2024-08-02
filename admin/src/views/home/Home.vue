@@ -109,8 +109,8 @@ const myChartsAppWeekDataRef = ref();
 const myChartsAppWeekData = shallowRef();
 const initAppWeekData = () => {
   nextTick(() => {
-      myChartsAppWeekData.value = echarts.init(myChartsAppWeekDataRef.value);
-      loadAppWeekData();
+    myChartsAppWeekData.value = echarts.init(myChartsAppWeekDataRef.value);
+    loadAppWeekData();
   });
 };
 initAppWeekData();
@@ -146,10 +146,10 @@ const myChartsContentWeekDataRef = ref();
 const myChartsContentWeekData = shallowRef();
 const initContentWeekData = () => {
   nextTick(() => {
-      myChartsContentWeekData.value = echarts.init(
-        myChartsContentWeekDataRef.value
-      );
-      loadContentWeekData();
+    myChartsContentWeekData.value = echarts.init(
+      myChartsContentWeekDataRef.value
+    );
+    loadContentWeekData();
   });
 };
 initContentWeekData();
@@ -177,50 +177,50 @@ const loadContentWeekData = async () => {
     });
   });
   myChartsContentWeekData.value.setOption(
-    getOption("App下载注册用户统计", xAxisData, seriesData)
+    getOption("内容统计", xAxisData, seriesData)
   );
 };
 </script>
 
-<style lang="scss">
-.card-title {
-  font-weight: bold;
-  font-size: 20px;
-  margin-bottom: 10px;
-}
+<style lang="scss" scoped>
 .part-panel {
+  .card-title {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
   margin-top: 10px;
   &:first-child {
     margin-top: 0;
   }
-}
-.data-list {
-  .data-item {
-    background: #f4f9fd;
-    color: #9a9fa6;
-    padding: 20px;
-    border-radius: 5px;
-    width: 100%;
-    .data-panel {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .data {
-      font-size: 25px;
-      color: #000012;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-    .pre {
-      margin-top: 5px;
-      .new {
-        color: #ff6873;
+  .data-list {
+    .data-item {
+      background: #f4f9fd;
+      color: #9a9fa6;
+      padding: 20px;
+      border-radius: 5px;
+      width: 100%;
+      .data-panel {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .data {
+        font-size: 25px;
+        color: #000012;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      .pre {
+        margin-top: 5px;
+        .new {
+          color: #ff6873;
+        }
       }
     }
+    .chart {
+      height: calc(100vh - 400px);
+    }
   }
-}
-.chart {
-  height: calc(100vh - 400px);
 }
 </style>
