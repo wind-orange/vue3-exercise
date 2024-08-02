@@ -22,7 +22,11 @@ const router = createRouter({
       },{
         path:'/setting/menu',
         name:'菜单管理',
-        component: () => import('../views/settings/menu.vue')
+        component: () => import('../views/settings/Menu.vue')
+      },{
+        path:'/setting/role',
+        name:'角色管理',
+        component:()=> import('../views/settings/Role.vue')
       }]
     }
   ]
