@@ -109,10 +109,8 @@ const myChartsAppWeekDataRef = ref();
 const myChartsAppWeekData = shallowRef();
 const initAppWeekData = () => {
   nextTick(() => {
-    setTimeout(() => {
       myChartsAppWeekData.value = echarts.init(myChartsAppWeekDataRef.value);
       loadAppWeekData();
-    }, 100);
   });
 };
 initAppWeekData();
@@ -125,7 +123,6 @@ const loadAppWeekData = async () => {
     return;
   }
   const data = result.data;
-  console.log(data);
   const xAxisData = data.dateList;
   const seriesData = [];
   const colors = ["#1b9cfc", "#67c23a"];
@@ -149,12 +146,10 @@ const myChartsContentWeekDataRef = ref();
 const myChartsContentWeekData = shallowRef();
 const initContentWeekData = () => {
   nextTick(() => {
-    setTimeout(() => {
       myChartsContentWeekData.value = echarts.init(
         myChartsContentWeekDataRef.value
       );
       loadContentWeekData();
-    },100);
   });
 };
 initContentWeekData();
