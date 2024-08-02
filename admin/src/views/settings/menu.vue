@@ -99,9 +99,15 @@
       </el-col>
     </el-row>
   </div>
+  <MenuEdit
+    ref="menuEditRef"
+    :treeData="treeData"
+    @reload="loadTreeData"
+  ></MenuEdit>
 </template>
 
 <script setup>
+import MenuEdit from "@/components/MenuEdit.vue";
 import { ref, getCurrentInstance, nextTick } from "vue";
 const { proxy } = getCurrentInstance();
 const api = {
@@ -115,7 +121,6 @@ const treeProps = {
   value: "menuId",
 };
 const refTree = ref();
-const currentNodeKey = ref(); // 当前node
 
 // 请求左侧菜单列表数据
 const treeData = ref();
@@ -126,7 +131,7 @@ const loadTreeData = async () => {
   if (!result) return;
   const data = result.data;
   treeData.value = data;
-  // 默认选中第一个
+  // 默认选中第一个node
   nextTick(() => {
     let firstNodeKey = data[0].children ? data[0].children[0] : data[0];
     let curKey = firstNodeKey.menuId;
@@ -152,6 +157,24 @@ const getMenuNames = (node, menuNames) => {
   if (node.parent) {
     getMenuNames(node.parent, menuNames);
   }
+};
+
+// 删除菜单列表
+const delMenu = (data) => {
+  proxy.Confirm("确定要删除菜单吗？", async () => {
+    let result = await proxy.Request({
+      url: api.delMenu,
+      parmas: { menuId: data.menuId },
+    });
+    if (!result) return;
+    proxy.Message.success("删除成功");
+    loadTreeData();
+  });
+};
+// 编辑+添加
+const menuEditRef = ref();
+const showEditDialog = (type, data) => {
+  menuEditRef.value.showEditDialog(type, data);
 };
 </script>
 
