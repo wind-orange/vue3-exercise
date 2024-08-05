@@ -56,8 +56,10 @@
         >
           <template #operation="{ index, row }">
             <div class="row-op-panel">
-              <a class="a-link" href="javascript:void(0)">修改 </a>
-              <a class="a-link" href="javascript:void(0)">删除 </a>
+              <a class="a-link" href="javascript:void(0)" @click="">修改 </a>
+              <a class="a-link" href="javascript:void(0)" @click="delRole(row)"
+                >删除
+              </a>
             </div>
           </template>
         </Table>
@@ -68,7 +70,10 @@
       <el-card class="box-card">
         <template #header>
           <span>菜单信息</span>
-          <el-button type="primary" :style="{ float: 'right' }" @click=""
+          <el-button
+            type="primary"
+            :style="{ float: 'right' }"
+            @click="saveRoleMenu"
             >保存
           </el-button>
         </template>
@@ -154,6 +159,20 @@ const loadDataList = async () => {
   }
   tableInfoRef.value.setCurrentRow("roleId", currentRow.value.roleId);
 };
+// 删除列表
+const delRole = (data) => {
+  proxy.Confirm(`确定要删除【${data.roleName}】吗？`),
+    async () => {
+      let result = await proxy.Request({
+        url: api.delRole,
+        parmas: { roleId: data.roleId },
+      });
+      if (!result) return;
+      proxy.Message.success("删除成功");
+      currentRow.value = {};
+      loadDataList();
+    };
+};
 
 // 菜单
 const replaceFields = ref({ label: "menuName" });
@@ -177,6 +196,21 @@ const handleRowClick = async (row) => {
   });
   if (!result) return;
   menuTreeRef.value.setCheckedKeys(result.data.menuIds);
+};
+// 保存角色菜单
+const saveRoleMenu = async () => {
+  let menuIdArray = menuTreeRef.value.getCheckedKeys(); // 全选
+  let halfMenuIdArray = menuTreeRef.value.getHalfCheckedKeys() || []; // 半选
+  let result = await proxy.Request({
+    url: api.saveRoleMenu,
+    parmas: {
+      roleId: currentRow.value.roleId,
+      menuIds: menuIdArray.join(","),
+      halfMenuIds: halfMenuIdArray.join(","),
+    },
+  });
+  if (!result) return;
+  proxy.Message.success("保存成功");
 };
 </script>
 
