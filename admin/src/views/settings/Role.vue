@@ -26,8 +26,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="4" :style="{ paddingLeft: '10px' }">
-            <el-button type="success">查询</el-button>
-            <el-button type="primary">新增角色</el-button>
+            <el-button type="success" @click="">查询</el-button>
+            <el-button type="primary" @click="">新增角色</el-button>
           </el-col>
         </el-row>
       </el-form>
@@ -68,10 +68,22 @@
       <el-card class="box-card">
         <template #header>
           <span>菜单信息</span>
-          <el-button type="primary" :style="{ float: 'right' }"
+          <el-button type="primary" :style="{ float: 'right' }" @click=""
             >保存
           </el-button>
         </template>
+        <div class="detail-tree-panel">
+          <el-tree
+            ref="menuTreeRef"
+            node-key="menuId"
+            show-checkbox
+            :data="treeData"
+            default-expand-all
+            v-if="treeData.length"
+            :props="replaceFields"
+            :check-strictly="false"
+          />
+        </div>
       </el-card>
     </el-col>
   </el-row>
@@ -114,6 +126,7 @@ const columns = [
   },
 ];
 
+// 角色列表
 const searchForm = ref();
 const tableData = ref({});
 const currentRow = ref({}); // 当前选中的行
@@ -137,12 +150,34 @@ const loadDataList = async () => {
     result.data.list.length > 0
   ) {
     Object.assign(currentRow.value, result.data.list[0]);
-    handleRowClick(currentRow.value)
+    handleRowClick(currentRow.value);
   }
   tableInfoRef.value.setCurrentRow("roleId", currentRow.value.roleId);
 };
+
+// 菜单
+const replaceFields = ref({ label: "menuName" });
+const menuTreeRef = ref();
+const treeData = ref([]);
+// 获取数据
+const loadMenu = async () => {
+  let result = await proxy.Request({
+    url: api.loadMenu,
+  });
+  if (!result) return;
+  treeData.value = result.data;
+};
+loadMenu();
 // 选中列表渲染相应菜单
-const handleRowClick=(row)=>{}
+const handleRowClick = async (row) => {
+  Object.assign(currentRow.value, row);
+  let result = await proxy.Request({
+    url: api.roleDetail,
+    parmas: { roleId: row.roleId },
+  });
+  if (!result) return;
+  menuTreeRef.value.setCheckedKeys(result.data.menuIds);
+};
 </script>
 
 <style lang="scss" scoped>
