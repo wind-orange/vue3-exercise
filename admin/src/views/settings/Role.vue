@@ -27,7 +27,7 @@
           </el-col>
           <el-col :span="4" :style="{ paddingLeft: '10px' }">
             <el-button type="success" @click="">查询</el-button>
-            <el-button type="primary" @click="">新增角色</el-button>
+            <el-button type="primary" @click="showEdit()">新增角色</el-button>
           </el-col>
         </el-row>
       </el-form>
@@ -56,7 +56,9 @@
         >
           <template #operation="{ index, row }">
             <div class="row-op-panel">
-              <a class="a-link" href="javascript:void(0)" @click="">修改 </a>
+              <a class="a-link" href="javascript:void(0)" @click="showEdit(row)"
+                >修改
+              </a>
               <a class="a-link" href="javascript:void(0)" @click="delRole(row)"
                 >删除
               </a>
@@ -92,10 +94,16 @@
       </el-card>
     </el-col>
   </el-row>
+  <RoleEdit
+    ref="roleEditRef"
+    @reload="loadDataList"
+    :treeData="treeData"
+  ></RoleEdit>
 </template>
 
 <script setup>
 import Table from "@/components/Table.vue";
+import RoleEdit from "@/components/RoleEdit.vue";
 import { getCurrentInstance, ref } from "vue";
 
 const { proxy } = getCurrentInstance();
@@ -172,6 +180,11 @@ const delRole = (data) => {
       currentRow.value = {};
       loadDataList();
     };
+};
+//新增和修改列表
+const roleEditRef = ref();
+const showEdit = (data = {}) => {
+  roleEditRef.value.showEdit(Object.assign({}, data));
 };
 
 // 菜单
