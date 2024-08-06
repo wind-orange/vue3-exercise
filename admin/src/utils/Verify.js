@@ -32,6 +32,6 @@ export default {
     return verify(rule, value, regs.version, callback);
   },
   phone: (rule, value, callback) => {
-    return verify(rule, value, regs.version, callback);
+    return verify(rule, value, regs.phone, callback);
   },
 };
