@@ -27,6 +27,10 @@ const router = createRouter({
         path:'/setting/role',
         name:'角色管理',
         component:()=> import('../views/settings/Role.vue')
+      },{
+        path:'/setting/user',
+        name:'用户管理',
+        component:()=> import('../views/settings/User.vue')
       }]
     }
   ]
