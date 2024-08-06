@@ -61,7 +61,10 @@
               <a class="a-link" href="javascript:void(0)" @click="showEdit(row)"
                 >修改
               </a>
-              <a class="a-link" href="javascript:void(0)" @click="delRole(row)"
+              <a
+                class="a-link"
+                href="javascript:void(0)"
+                @click.prevent="delRole(row)"
                 >删除
               </a>
             </div>
@@ -171,17 +174,16 @@ const loadDataList = async () => {
 };
 // 删除列表
 const delRole = (data) => {
-  proxy.Confirm(`确定要删除【${data.roleName}】吗？`),
-    async () => {
-      let result = await proxy.Request({
-        url: api.delRole,
-        parmas: { roleId: data.roleId },
-      });
-      if (!result) return;
-      proxy.Message.success("删除成功");
-      currentRow.value = {};
-      loadDataList();
-    };
+  proxy.Confirm(`确定要删除【${data.roleName}】吗？`, async () => {
+    let result = await proxy.Request({
+      url: api.delRole,
+      parmas: { roleId: data.roleId },
+    });
+    if (!result) return;
+    proxy.Message.success("删除成功");
+    currentRow.value = {};
+    loadDataList();
+  });
 };
 //新增和修改列表
 const roleEditRef = ref();
