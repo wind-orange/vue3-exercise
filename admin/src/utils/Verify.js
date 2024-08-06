@@ -4,6 +4,7 @@ const regs = {
   number: /^([0]|[1-9][0-9]*)$/,
   password: /^(?=.*\d)(?=.*[a-zA-Z])[\da-zA-Z~!@#$%^&*_]{8,}$/,
   version: /^[0-9\.]+$/,
+  phone: /^1[3-9]\d{9}$/,
 };
 const verify = (rule, value, reg, callback) => {
   if (value) {
@@ -28,6 +29,9 @@ export default {
     return verify(rule, value, regs.password, callback);
   },
   version: (rule, value, callback) => {
+    return verify(rule, value, regs.version, callback);
+  },
+  phone: (rule, value, callback) => {
     return verify(rule, value, regs.version, callback);
   },
 };
