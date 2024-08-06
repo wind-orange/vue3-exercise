@@ -9,6 +9,7 @@
             <el-form-item label="角色名称">
               <el-input
                 class="password-input"
+                v-model="searchForm.roleNameFuzzy"
                 clearable
                 placeholder="支持模糊搜索"
                 @keyup.enter.native="loadDataList"
@@ -19,6 +20,7 @@
             <el-form-item label="描述">
               <el-input
                 class="password-input"
+                v-model="searchForm.roleDescFuzzy"
                 clearable
                 placeholder="支持模糊搜索"
                 @keyup.enter.native="loadDataList"
@@ -26,7 +28,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="4" :style="{ paddingLeft: '10px' }">
-            <el-button type="success" @click="">查询</el-button>
+            <el-button type="success" @click="loadDataList">查询</el-button>
             <el-button type="primary" @click="showEdit()">新增角色</el-button>
           </el-col>
         </el-row>
@@ -140,7 +142,7 @@ const columns = [
 ];
 
 // 角色列表
-const searchForm = ref();
+const searchForm = ref({});
 const tableData = ref({});
 const currentRow = ref({}); // 当前选中的行
 // 获取数据
