@@ -2,25 +2,36 @@
   <div class="login-body">
     <div class="left-bg"></div>
     <div class="right-panel">
-      <el-form class="login-form" :model="formData" ref="formDataRef" :rules="rules" @submit.prevent>
+      <el-form
+        class="login-form"
+        :model="formData"
+        ref="formDataRef"
+        :rules="rules"
+        @submit.prevent
+      >
         <div class="register">
           <div class="title">后台管理系统登录</div>
           <el-form-item prop="phone">
-            <el-input placeholder="请输入账号"
-            size="large" clearable
-            v-model.trim="formData.phone">
+            <el-input
+              placeholder="请输入账号"
+              size="large"
+              clearable
+              v-model.trim="formData.phone"
+            >
               <template #prefix>
                 <span class="iconfont icon-phone"></span>
               </template>
             </el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input placeholder="请输入密码"
-            size="large"
-            clearable
-            type="password"
-            show-password
-            v-model.trim="formData.password">
+            <el-input
+              placeholder="请输入密码"
+              size="large"
+              clearable
+              type="password"
+              show-password
+              v-model.trim="formData.password"
+            >
               <template #prefix>
                 <span class="iconfont icon-lock"></span>
               </template>
@@ -28,113 +39,126 @@
           </el-form-item>
           <el-form-item prop="checkCode">
             <div class="check-code-panel">
-              <el-input placeholder="请输入验证码"
-              size="large"
-              clearable
-              v-model.trim="formData.checkCode">
+              <el-input
+                placeholder="请输入验证码"
+                size="large"
+                clearable
+                v-model.trim="formData.checkCode"
+              >
                 <template #prefix>
                   <span class="iconfont icon-Safety"></span>
                 </template>
               </el-input>
-              <img class="check-code" :src="checkCodeUrl" @click="changeCheckCode">
+              <img
+                class="check-code"
+                :src="checkCodeUrl"
+                @click="changeCheckCode"
+              />
             </div>
           </el-form-item>
           <el-form-item prop="rememberMe">
             <el-checkbox v-model="formData.rememberMe">记住我</el-checkbox>
           </el-form-item>
           <el-form-item prop="submit">
-            <el-button class="btn" size="large" type="primary" @click="doSubmit">登录</el-button>
+            <el-button class="btn" size="large" type="primary" @click="doSubmit"
+              >登录</el-button
+            >
           </el-form-item>
         </div>
       </el-form>
     </div>
   </div>
 </template>
-    
-<script setup>
-import {getCurrentInstance, nextTick, onMounted, ref} from 'vue'
-import md5 from 'js-md5';
-import { useRouter } from 'vue-router';
-const router = useRouter()
-const {proxy} = getCurrentInstance()
 
-const formData = ref({})
-const formDataRef = ref()
+<script setup>
+import { getCurrentInstance, nextTick, onMounted, ref } from "vue";
+import md5 from "js-md5";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const { proxy } = getCurrentInstance();
+
+const formData = ref({});
+const formDataRef = ref();
 const rules = {
-  phone:[{required:true,message:"请输入账号"}],
-  password:[{required:true,message:"请输入密码"}],
-  checkCode:[{required:true,message:"请输入验证码"}],
-}
+  phone: [{ required: true, message: "请输入账号" }],
+  password: [{ required: true, message: "请输入密码" }],
+  checkCode: [{ required: true, message: "请输入验证码" }],
+};
 // 验证码
 const api = {
-  checkCode:"/api/checkCode",
-  login:"/login"
-}
-const checkCodeUrl = ref(null)
+  checkCode: "/api/checkCode",
+  login: "/login",
+};
+const checkCodeUrl = ref(null);
 const changeCheckCode = () => {
-  checkCodeUrl.value = `${api.checkCode}?time=${new Date().getTime()}`
-}
+  checkCodeUrl.value = `${api.checkCode}?time=${new Date().getTime()}`;
+};
 // 登录
-const doSubmit = () =>{
+const doSubmit = () => {
   formDataRef.value.validate(async (valid) => {
-    if(!valid){return}
-    let parmas = {}
-    Object.assign(parmas,formData.value)
-    let cookieLoginInfo = proxy.VueCookies.get("loginInfo")
-    let cookiePassword = cookieLoginInfo == null ? null : cookieLoginInfo.password
-    if(parmas.password!=cookiePassword){
-      parmas.password = md5(parmas.password)
+    if (!valid) {
+      return;
+    }
+    let parmas = {};
+    Object.assign(parmas, formData.value);
+    let cookieLoginInfo = proxy.VueCookies.get("loginInfo");
+    let cookiePassword =
+      cookieLoginInfo == null ? null : cookieLoginInfo.password;
+    if (parmas.password != cookiePassword) {
+      parmas.password = md5(parmas.password);
     }
     let result = await proxy.Request({
-      url:api.login,
+      url: api.login,
       parmas,
-      errorCallback:()=>{changeCheckCode()}
-    })
-    if(!result){return}
+      errorCallback: () => {
+        changeCheckCode();
+      },
+    });
+    if (!result) {
+      return;
+    }
     // 记住我
-    if(parmas.rememberMe){
+    if (parmas.rememberMe) {
       const loginInfo = {
-        phone:parmas.phone,
-        password:parmas.password,
-        rememberMe:parmas.rememberMe
-      }
-      proxy.VueCookies.set("loginInfo",loginInfo,"7d")
-    }else{
-      proxy.VueCookies.remove("loginInfo")
+        phone: parmas.phone,
+        password: parmas.password,
+        rememberMe: parmas.rememberMe,
+      };
+      proxy.VueCookies.set("loginInfo", loginInfo, "7d");
+    } else {
+      proxy.VueCookies.remove("loginInfo");
     }
-    proxy.Message.success("登陆成功")
-    sessionStorage.setItem("userInfo",JSON.stringify(result.data))
-    let firstMenu = result.data.menuList[0]
-    if(firstMenu.children>0){
-      firstMenu = firstMenu.children[0]
+    proxy.Message.success("登陆成功");
+    sessionStorage.setItem("userInfo", JSON.stringify(result.data));
+    let firstMenu = result.data.menuList[0];
+    if (firstMenu.children.length > 0) {
+      firstMenu = firstMenu.children[0];
     }
-    router.push(firstMenu.menuUrl)
-  })
-}
+    router.push(firstMenu.menuUrl);
+  });
+};
 
-
-onMounted(() => init())
+onMounted(() => init());
 const init = () => {
   nextTick(() => {
-      changeCheckCode()
-      formDataRef.value.resetFields()
-      formData.value = {}
-      const cookieLoginInfo = proxy.VueCookies.get("loginInfo")
-      if(cookieLoginInfo){
-        formData.value = cookieLoginInfo
-      }
-    })
-}
-
+    changeCheckCode();
+    formDataRef.value.resetFields();
+    formData.value = {};
+    const cookieLoginInfo = proxy.VueCookies.get("loginInfo");
+    if (cookieLoginInfo) {
+      formData.value = cookieLoginInfo;
+    }
+  });
+};
 </script>
-    
+
 <style lang="scss" scoped>
-.login-body{
+.login-body {
   display: flex;
   height: calc(100vh);
   background-color: skyblue;
 
-  .left-bg{
+  .left-bg {
     flex: 1;
     background-image: url(../assets/login_img.png);
     background-size: 800px cover;
@@ -142,18 +166,18 @@ const init = () => {
     background-position: center;
   }
 
-  .right-panel{
+  .right-panel {
     width: 430px;
     margin-right: 15%;
     margin-top: calc((100vh - 500px) / 2);
   }
 
-  .register{
+  .register {
     padding: 25px;
     border-radius: 5px;
     background-color: #fff;
 
-    .title{
+    .title {
       margin-bottom: 20px;
       font-size: 18px;
       font-weight: bold;
