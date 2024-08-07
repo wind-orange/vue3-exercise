@@ -1,6 +1,6 @@
 const PermissionCode = {
   home: "home",
-  menu: { edit: "settings_menu_list" },
+  menu: { edit: "settings_menu_edit" },
   role: {
     edit: "settings_role_edit",
     del: "settings_role_del",
@@ -9,7 +9,7 @@ const PermissionCode = {
     edit: "settings_account_edit",
     del: "settings_account_del",
     updatePwd: "settings_account_update_password",
-    updateStatue: "settings_account_op_status",
+    updateStatus: "settings_account_op_status",
   },
   category: {
     edit: "category_edit",
