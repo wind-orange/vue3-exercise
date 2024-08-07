@@ -34,10 +34,10 @@ app.config.globalProperties.PermissionCode = PermissionCode;
 app.directive("has", {
   mounted: (el, binding, vnode) => {
     let userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-    let PermissionCodeList = userInfo.PermissionCodeList;
-    PermissionCodeList =
-      PermissionCodeList == undefined ? [] : PermissionCodeList;
-    if (!PermissionCodeList.includes(binding.value)) {
+    let permissionCodeList = userInfo.permissionCodeList;
+    permissionCodeList =
+      permissionCodeList == undefined ? [] : permissionCodeList;
+    if (!permissionCodeList.includes(binding.value)) {
       el.parentNode.removeChild(el);
     }
   },
