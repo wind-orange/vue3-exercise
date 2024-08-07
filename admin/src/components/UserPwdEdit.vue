@@ -74,7 +74,7 @@ const rules = {
   rePassword: [
     { required: true, message: "请再次输入密码" },
     {
-      validator: checkPassword,
+      validator: checkPassword(),
       message: "两次输入的密码不一致",
     },
   ],

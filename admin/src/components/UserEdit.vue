@@ -21,7 +21,12 @@
       </el-form-item>
       <template v-if="!formData.userId">
         <el-form-item label="密码" prop="password">
-          <el-input :maxLength="20" v-model="formData.password"></el-input>
+          <el-input
+            :maxLength="20"
+            v-model="formData.password"
+            type="password"
+            show-password
+          ></el-input>
         </el-form-item>
         <el-form-item label="重复密码" prop="rePassword">
           <el-input
@@ -42,7 +47,7 @@
             v-for="(item, index) in roleList"
             :key="index"
           >
-            <el-checkbox :value="item.roleId + ''">
+            <el-checkbox :value="`${item.roleId}`">
               {{ item.roleName }}
             </el-checkbox>
           </span>
@@ -116,7 +121,7 @@ const rules = {
   rePassword: [
     { required: true, message: "请再次输入密码" },
     {
-      validator: checkPassword,
+      validator: checkPassword(),
       message: "两次输入的密码不一致",
     },
   ],
