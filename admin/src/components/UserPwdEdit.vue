@@ -36,7 +36,7 @@ import Dialog from "./Dialog.vue";
 import { ref, getCurrentInstance, nextTick } from "vue";
 const { proxy } = getCurrentInstance();
 const api = {
-  updatePassword: "/settings/saveAccount",
+  updatePassword: "/settings/updatePassword",
 };
 const dialogConfig = ref({
   show: false,
@@ -51,17 +51,6 @@ const dialogConfig = ref({
     },
   ],
 });
-
-// 获取角色列表
-const roleList = ref([]);
-const loadRoleList = async () => {
-  let result = await proxy.Request({
-    url: api.loadAllRoles,
-  });
-  if (!result) return;
-  roleList.value = result.data;
-};
-loadRoleList();
 
 // 验证密码
 const checkPassword = (rule, value, callback) => {
