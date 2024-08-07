@@ -29,7 +29,12 @@
           </el-col>
           <el-col :span="4" :style="{ paddingLeft: '10px' }">
             <el-button type="success" @click="loadDataList">查询</el-button>
-            <el-button type="primary" @click="showEdit()">新增用户</el-button>
+            <el-button
+              type="primary"
+              @click="showEdit()"
+              v-has="proxy.PermissionCode.account.edit"
+              >新增用户</el-button
+            >
           </el-col>
         </el-row>
       </el-form>
@@ -53,20 +58,36 @@
         <span style="color: green" v-else>启用</span>
       </template>
       <template #slotOperation="{ index, row }">
-        <div class="row-op-panel">
-          <a class="a-link" href="javascript:void(0)" @click="showEdit(row)"
+        <div
+          class="row-op-panel"
+          v-if="!(userInfo.superAdmin && userInfo.userId == row.userId)"
+        >
+          <a
+            class="a-link"
+            href="javascript:void(0)"
+            @click="showEdit(row)"
+            v-has="proxy.PermissionCode.account.edit"
             >修改
           </a>
-          <a class="a-link" href="javascript:void(0)" @click="showPwdEdit(row)"
+          <a
+            class="a-link"
+            href="javascript:void(0)"
+            @click="showPwdEdit(row)"
+            v-has="proxy.PermissionCode.account.updatePwd"
             >修改密码
           </a>
           <a
             class="a-link"
             href="javascript:void(0)"
             @click="changeAccountStatus(row)"
+            v-has="proxy.PermissionCode.account.updateStatus"
             >{{ row.status == 0 ? "启用" : "禁用" }}
           </a>
-          <a class="a-link" href="javascript:void(0)" @click="delAccount(row)"
+          <a
+            class="a-link"
+            href="javascript:void(0)"
+            @click="delAccount(row)"
+            v-has="proxy.PermissionCode.account.del"
             >删除
           </a>
         </div>
@@ -93,6 +114,7 @@ const tableInfoRef = ref();
 const tableOptions = ref({
   extHeight: 125,
 });
+const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
 // Table字段
 const columns = [
   {

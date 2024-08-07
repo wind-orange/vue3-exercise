@@ -26,7 +26,10 @@
               <span class="custom-node-style">
                 <span class="node-title">{{ data.menuName }}</span>
                 <el-dropdown trigger="click">
-                  <span class="iconfont icon-direction-down"></span>
+                  <span
+                    class="iconfont icon-direction-down"
+                    v-has="proxy.PermissionCode.menu.edit"
+                  ></span>
                   <template #dropdown>
                     <el-dropdown-menu>
                       <el-dropdown-item @click="showEditDialog('add', data)"
