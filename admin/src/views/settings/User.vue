@@ -80,7 +80,7 @@
 <script setup>
 import Table from "@/components/Table.vue";
 import UserEdit from "@/components/UserEdit.vue";
-import UserPwdEdit from "@/components/UserPwdEdit.vue"
+import UserPwdEdit from "@/components/UserPwdEdit.vue";
 import { getCurrentInstance, ref } from "vue";
 
 const { proxy } = getCurrentInstance();
