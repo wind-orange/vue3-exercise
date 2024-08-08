@@ -35,6 +35,7 @@
         prop="iconPath"
         v-if="formData.coverType == 1"
       >
+        <CoverUpload v-model="formData.iconPath" :type="0"></CoverUpload>
       </el-form-item>
       <el-form-item label="类型" prop="type">
         <el-radio-group v-model="formData.type">
@@ -49,6 +50,7 @@
 
 <script setup>
 import Dialog from "./Dialog.vue";
+import CoverUpload from "./CoverUpload.vue";
 import { ref, getCurrentInstance, nextTick } from "vue";
 const { proxy } = getCurrentInstance();
 const api = {
