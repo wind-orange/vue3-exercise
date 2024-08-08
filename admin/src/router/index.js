@@ -18,7 +18,7 @@ const router = createRouter({
       },{
         path:'/content/category',
         name:'分类管理',
-        component: () => import('../views/content/CategoryList.vue')
+        component: () => import('../views/content/Category.vue')
       },{
         path:'/setting/menu',
         name:'菜单管理',
