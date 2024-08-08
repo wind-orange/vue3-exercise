@@ -17,12 +17,14 @@ import VueCookies from "vue-cookies";
 
 import Dialog from "./components/Dialog.vue";
 import Table from "./components/Table.vue";
+import Cover from "./components/Cover.vue";
 const app = createApp(App);
 
 app.use(router);
 app.use(ElementPlus);
 app.component("Dialog", Dialog);
 app.component("Table", Table);
+app.component("Cover", Cover);
 
 app.config.globalProperties.Request = Request;
 app.config.globalProperties.Message = Message;
@@ -30,6 +32,10 @@ app.config.globalProperties.Confirm = Confirm;
 app.config.globalProperties.Verify = Verify;
 app.config.globalProperties.VueCookies = VueCookies;
 app.config.globalProperties.PermissionCode = PermissionCode;
+app.config.globalProperties.globalInfo = {
+  avatarUrl: "/api/file/getAvatar/",
+  imageUrl: "api/file/getImage/",
+};
 
 app.directive("has", {
   mounted: (el, binding, vnode) => {
