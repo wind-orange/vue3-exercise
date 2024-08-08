@@ -18,6 +18,7 @@ import VueCookies from "vue-cookies";
 import Dialog from "./components/Dialog.vue";
 import Table from "./components/Table.vue";
 import Cover from "./components/Cover.vue";
+import CoverUpload from "./components/CoverUpload.vue";
 const app = createApp(App);
 
 app.use(router);
@@ -25,6 +26,7 @@ app.use(ElementPlus);
 app.component("Dialog", Dialog);
 app.component("Table", Table);
 app.component("Cover", Cover);
+app.component("CoverUpload", CoverUpload);
 
 app.config.globalProperties.Request = Request;
 app.config.globalProperties.Message = Message;
