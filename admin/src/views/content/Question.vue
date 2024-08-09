@@ -121,8 +121,8 @@
         <el-rate v-model="row.difficultyLevel" :disabled="true"></el-rate>
       </template>
       <template #slotStatus="{ index, row }">
-        <span style="color: red" v-if="row.status == 0">待发布</span>
-        <span style="color: green" v-else>已发布</span>
+        <Badge showType="orange" text="待发布" v-if="row.status == 0"></Badge>
+        <Badge showType="green" text="已发布" v-if="row.status == 1"></Badge>
       </template>
       <template #slotOperation="{ index, row }">
         <div
@@ -154,6 +154,7 @@
 import QuestionEdit from "@/components/QuestionEdit.vue";
 import Table from "@/components/Table.vue";
 import CategorySelect from "@/components/content/CategorySelect.vue";
+import Badge from "@/components/Budge.vue";
 import { getCurrentInstance, ref } from "vue";
 
 const { proxy } = getCurrentInstance();
