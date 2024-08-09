@@ -109,9 +109,6 @@
   </div>
   <!-- 下方content -->
   <el-card class="table-data-card">
-    <template #header>
-      <span>问题列表</span>
-    </template>
     <Table
       ref="tableInfoRef"
       :columns="columns"
@@ -121,7 +118,7 @@
       :extHeight="tableOptions.extHeight"
     >
       <template #slotDifficultyLevel="{ index, row }">
-        <el-rate v-model="row.difficultyLevel" :disable="true"></el-rate>
+        <el-rate v-model="row.difficultyLevel" :disabled="true"></el-rate>
       </template>
       <template #slotStatus="{ index, row }">
         <span style="color: red" v-if="row.status == 0">待发布</span>
@@ -169,7 +166,7 @@ const api = {
 };
 const tableInfoRef = ref();
 const tableOptions = ref({
-  extHeight: 125,
+  selectType: "checkbox",
 });
 const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
 // Table字段
@@ -247,20 +244,6 @@ const delAccount = (data) => {
     });
     if (!result) return;
     proxy.Message.success("删除成功");
-    loadDataList();
-  });
-};
-// 禁用启用
-const changeAccountStatus = (data) => {
-  let status = data.status == 0 ? 1 : 0;
-  let info = status == 0 ? "禁用" : "启用";
-  proxy.Confirm(`确定要【${info}】【${data.userName}】吗？`, async () => {
-    let result = await proxy.Request({
-      url: api.updateStatus,
-      parmas: { userId: data.userId, status: status },
-    });
-    if (!result) return;
-    proxy.Message.success("操作成功");
     loadDataList();
   });
 };
