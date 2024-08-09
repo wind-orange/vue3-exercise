@@ -20,6 +20,10 @@ const router = createRouter({
         name:'分类管理',
         component: () => import('../views/content/Category.vue')
       },{
+        path:'/content/question',
+        name:'八股文管理',
+        component: () => import('../views/content/Question.vue')
+      },{
         path:'/setting/menu',
         name:'菜单管理',
         component: () => import('../views/settings/Menu.vue')
