@@ -83,7 +83,7 @@
               <el-button
                 type="info"
                 plain
-                @click="showEdit()"
+                @click="showImport()"
                 v-has="proxy.PermissionCode.account.edit"
                 >批量导入</el-button
               >
@@ -148,6 +148,7 @@
     </Table>
   </el-card>
   <QuestionEdit ref="questionEditRef" @reload="loadDataList"></QuestionEdit>
+  <importData ref="importDataRef" :type="0" @reload="loadDataList"></importData>
 </template>
 
 <script setup>
@@ -155,6 +156,7 @@ import QuestionEdit from "@/components/QuestionEdit.vue";
 import Table from "@/components/Table.vue";
 import CategorySelect from "@/components/content/CategorySelect.vue";
 import Badge from "@/components/Budge.vue";
+import importData from "@/components/content/importData.vue";
 import { getCurrentInstance, ref } from "vue";
 
 const { proxy } = getCurrentInstance();
@@ -253,6 +255,12 @@ const delAccount = (data) => {
 const questionEditRef = ref();
 const showEdit = (data = {}) => {
   questionEditRef.value.showEdit(Object.assign({}, data));
+};
+
+// 批量添加
+const importDataRef = ref();
+const showImport = () => {
+  importDataRef.value.showImport();
 };
 </script>
 
