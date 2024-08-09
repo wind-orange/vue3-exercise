@@ -19,6 +19,7 @@ import Dialog from "./components/Dialog.vue";
 import Table from "./components/Table.vue";
 import Cover from "./components/Cover.vue";
 import CoverUpload from "./components/CoverUpload.vue";
+import CategorySelect from "./components/content/CategorySelect.vue";
 const app = createApp(App);
 
 app.use(router);
@@ -27,6 +28,7 @@ app.component("Dialog", Dialog);
 app.component("Table", Table);
 app.component("Cover", Cover);
 app.component("CoverUpload", CoverUpload);
+app.component("CategorySelect", CategorySelect);
 
 app.config.globalProperties.Request = Request;
 app.config.globalProperties.Message = Message;
