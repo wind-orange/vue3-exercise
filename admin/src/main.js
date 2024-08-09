@@ -36,7 +36,7 @@ app.config.globalProperties.VueCookies = VueCookies;
 app.config.globalProperties.PermissionCode = PermissionCode;
 app.config.globalProperties.globalInfo = {
   avatarUrl: "/api/file/getAvatar/",
-  imageUrl: "api/file/getImage/",
+  imageUrl: "/api/file/getImage/",
 };
 
 app.directive("has", {
