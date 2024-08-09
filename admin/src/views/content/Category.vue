@@ -3,7 +3,7 @@
   <div class="top-panel">
     <el-card>
       <!-- 搜索框 -->
-      <el-form :model="searchForm" label-width="70px" label-position="right">
+      <el-form label-width="70px" label-position="right">
         <el-button
           type="primary"
           @click="showEdit()"
@@ -40,10 +40,7 @@
         <span v-if="row.type == 2">问题/考题分类</span>
       </template>
       <template #slotOperation="{ index, row }">
-        <div
-          class="row-op-panel"
-          v-if="!(userInfo.superAdmin && userInfo.userId == row.userId)"
-        >
+        <div class="row-op-panel">
           <a
             class="a-link"
             href="javascript:void(0)"
@@ -54,14 +51,14 @@
           <a
             class="a-link"
             href="javascript:void(0)"
-            @click="delAccount(row)"
+            @click="delCategory(row)"
             v-has="proxy.PermissionCode.category.del"
             >删除
           </a>
           <a
             :class="[index == 0 ? 'not-allow' : 'a-link']"
             href="javascript:void(0)"
-            @click="delAccount(row)"
+            @click="changeSort(index, 'up')"
             v-has="proxy.PermissionCode.category.edit"
             >上移
           </a>
@@ -70,7 +67,7 @@
               index == tableData.list.length - 1 ? 'not-allow' : 'a-link',
             ]"
             href="javascript:void(0)"
-            @click="delAccount(row)"
+            @click="changeSort(index, 'down')"
             v-has="proxy.PermissionCode.category.edit"
             >下移
           </a>
@@ -78,12 +75,12 @@
       </template>
     </Table>
   </el-card>
-  <UserEdit ref="userEditRef" @reload="loadDataList"></UserEdit>
+  <CategoryEdit ref="categoryEditRef" @reload="loadDataList"></CategoryEdit>
 </template>
 
 <script setup>
 import Table from "@/components/Table.vue";
-import UserEdit from "@/components/UserEdit.vue";
+import CategoryEdit from "@/components/CategoryEdit.vue";
 import Cover from "@/components/Cover.vue";
 import { getCurrentInstance, ref } from "vue";
 
@@ -98,7 +95,6 @@ const tableInfoRef = ref();
 const tableOptions = ref({
   extHeight: 125,
 });
-const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
 // Table字段
 const columns = [
   {
@@ -124,8 +120,6 @@ const columns = [
   },
 ];
 
-// 用户列表
-const searchForm = ref({});
 const tableData = ref({});
 // 获取数据
 const loadDataList = async () => {
@@ -137,41 +131,48 @@ const loadDataList = async () => {
 };
 
 // 删除用户
-const delAccount = (data) => {
-  proxy.Confirm(`确定要删除【${data.userName}】吗？`, async () => {
+const delCategory = (data) => {
+  proxy.Confirm(`确定要删除【${data.categoryName}】吗？`, async () => {
     let result = await proxy.Request({
-      url: api.delAccount,
-      parmas: { userId: data.userId },
+      url: api.delCategory,
+      parmas: { categoryId: data.categoryId },
     });
     if (!result) return;
     proxy.Message.success("删除成功");
     loadDataList();
   });
 };
-// 禁用启用
-const changeAccountStatus = (data) => {
-  let status = data.status == 0 ? 1 : 0;
-  let info = status == 0 ? "禁用" : "启用";
-  proxy.Confirm(`确定要【${info}】【${data.userName}】吗？`, async () => {
-    let result = await proxy.Request({
-      url: api.updateStatus,
-      parmas: { userId: data.userId, status: status },
-    });
-    if (!result) return;
-    proxy.Message.success("操作成功");
-    loadDataList();
+
+// 排序
+const changeSort = async (index, type) => {
+  let dataList = tableData.value.list;
+  if (
+    (type === "down" && index == dataList.length - 1) ||
+    (type === "up" && index == 0)
+  ) {
+    return;
+  }
+  let temp = dataList[index];
+  let number = type === "down" ? 1 : -1;
+  dataList.splice(index, 1);
+  dataList.splice(index + number, 0, temp);
+  let categoryIds = [];
+  dataList.forEach((element) => {
+    categoryIds.push(element.categoryId);
   });
+  let result = await proxy.Request({
+    url: api.changeSort,
+    parmas: { categoryIds: categoryIds.join(",") },
+  });
+  if (!result) return;
+  proxy.Message.success("排序成功")
+  loadDataList()
 };
 
-// 新增和修改用户
-const userEditRef = ref();
+// 新增分类、修改
+const categoryEditRef = ref();
 const showEdit = (data = {}) => {
-  userEditRef.value.showEdit(Object.assign({}, data));
-};
-// 修改密码
-const userRef = ref();
-const showPwdEdit = (data = {}) => {
-  userRef.value.showEdit(Object.assign({}, data));
+    categoryEditRef.value.showEdit(Object.assign({}, data));
 };
 </script>
 
