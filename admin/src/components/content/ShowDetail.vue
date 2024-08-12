@@ -3,8 +3,27 @@
     <div class="show-detail">
       <div class="iconfont icon-arrow-left" @click="nextAndPre(-1)"></div>
       <div class="content-info">
-        <div class="header"></div>
-        <div class="content"></div>
+        <div class="header">{{ articleTitle[props.showType] }}</div>
+        <div class="content">
+          <div class="title">{{ detailInfo.title }}</div>
+          <div class="detail-info">
+            <div class="dif">
+              难度：
+              <el-rate
+                v-model="detailInfo.difficultyLevel"
+                :disable="true"
+              ></el-rate>
+            </div>
+            <div>更新：{{ detailInfo.createTime }}</div>
+          </div>
+          <div class="part-title">问题描述：</div>
+          <div
+            class="html-content"
+            v-html="detailInfo.question || '暂无问题描述'"
+          ></div>
+          <div class="part-title">答案解析：</div>
+          <div class="html-content" v-html="detailInfo.answerAnalysis"></div>
+        </div>
       </div>
       <div class="iconfont icon-arrow-right" @click="nextAndPre(1)"></div>
     </div>
@@ -23,6 +42,12 @@ const api = {
 const props = defineProps({
   showType: { type: Number, default: 1 },
 });
+// 标题
+const articleTitle = ref({
+  1: "八股文详情",
+  2: "考题详情",
+  3: "分享详情",
+});
 // 控制窗口显示
 const showWindow = ref(false);
 const closeWindow = () => {
@@ -31,7 +56,7 @@ const closeWindow = () => {
 };
 
 // 对外方法
-const showDetail = (id,parmas) => {
+const showDetail = (id, parmas) => {
   showWindow.value = true;
   searchParmas.value = parmas;
   currentId.value = id;
@@ -70,8 +95,7 @@ const nextAndPre = (type) => {
 };
 // 键盘监听事件
 const keyHandler = (event) => {
-  const e =
-    event || window.event || arguments.callee.caller.arguments[0];
+  const e = event || window.event || arguments.callee.caller.arguments[0];
   let key = e.keyCode;
   if (key == 39) {
     nextAndPre(1);
