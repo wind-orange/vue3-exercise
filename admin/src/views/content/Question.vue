@@ -77,28 +77,30 @@
                 type="primary"
                 plain
                 @click="showEdit()"
-                v-has="proxy.PermissionCode.account.edit"
+                v-has="proxy.PermissionCode.question.edit"
                 >新增问题</el-button
               >
               <el-button
                 type="info"
                 plain
                 @click="showImport()"
-                v-has="proxy.PermissionCode.account.edit"
+                v-has="proxy.PermissionCode.question.import"
                 >批量导入</el-button
               >
               <el-button
                 type="warning"
                 plain
-                @click="showEdit()"
-                v-has="proxy.PermissionCode.account.edit"
+                @click="postQuestionBatch"
+                v-has="proxy.PermissionCode.question.post"
+                :disabled="selectRowList.length == 0"
                 >批量发布</el-button
               >
               <el-button
                 type="danger"
                 plain
-                @click="showEdit()"
-                v-has="proxy.PermissionCode.account.edit"
+                @click="delQuestionBatch"
+                v-has="proxy.PermissionCode.question.del_batch"
+                :disabled="selectRowList.length == 0"
                 >批量删除</el-button
               >
             </el-col>
@@ -116,6 +118,8 @@
       :dataSource="tableData"
       :options="tableOptions"
       :extHeight="tableOptions.extHeight"
+      :selected="selectedHandler"
+      @rowSelected="rowSelected"
     >
       <template #slotDifficultyLevel="{ index, row }">
         <el-rate v-model="row.difficultyLevel" :disabled="true"></el-rate>
@@ -125,23 +129,44 @@
         <Badge showType="green" text="已发布" v-if="row.status == 1"></Badge>
       </template>
       <template #slotOperation="{ index, row }">
-        <div
-          class="row-op-panel"
-          v-if="!(userInfo.superAdmin && userInfo.userId == row.userId)"
-        >
+        <div class="row-op-panel">
           <a
             class="a-link"
             href="javascript:void(0)"
             @click="showEdit(row)"
-            v-has="proxy.PermissionCode.account.edit"
+            v-has="proxy.PermissionCode.question.edit"
+            v-if="
+              row.status == 0 &&
+              (row.createUserId == userInfo.userId || userInfo.superAdmin)
+            "
             >修改
           </a>
           <a
             class="a-link"
             href="javascript:void(0)"
-            @click="delAccount(row)"
-            v-has="proxy.PermissionCode.account.del"
-            >取消操作
+            @click="delQuestion(row)"
+            v-has="proxy.PermissionCode.question.del"
+            v-if="
+              row.status == 0 &&
+              (row.createUserId == userInfo.userId || userInfo.superAdmin)
+            "
+            >删除
+          </a>
+          <a
+            class="a-link"
+            href="javascript:void(0)"
+            @click="postQuestion(row)"
+            v-has="proxy.PermissionCode.question.post"
+            v-if="row.status == 0"
+            >发布
+          </a>
+          <a
+            class="a-link"
+            href="javascript:void(0)"
+            @click="cancelPostQuestion(row)"
+            v-has="proxy.PermissionCode.question.post"
+            v-if="row.status == 1"
+            >取消发布
           </a>
         </div>
       </template>
@@ -238,29 +263,88 @@ const loadDataList = async () => {
   Object.assign(tableData.value, result.data);
 };
 
-// 删除用户
-const delAccount = (data) => {
-  proxy.Confirm(`确定要删除【${data.userName}】吗？`, async () => {
-    let result = await proxy.Request({
-      url: api.delAccount,
-      parmas: { userId: data.userId },
-    });
-    if (!result) return;
-    proxy.Message.success("删除成功");
-    loadDataList();
-  });
-};
-
 // 新增和修改用户
 const questionEditRef = ref();
 const showEdit = (data = {}) => {
   questionEditRef.value.showEdit(Object.assign({}, data));
 };
 
-// 批量添加
+// 批量导入
 const importDataRef = ref();
 const showImport = () => {
   importDataRef.value.showImport();
+};
+
+// 可以选中的条件
+const selectedHandler = (row, index) => {
+  return row.status == 0;
+};
+// 已经选中
+const selectRowList = ref([]);
+const rowSelected = (rows) => {
+  selectRowList.value = rows.map((item) => {
+    return item.questionId;
+  });
+};
+
+// 删除
+const delQuestionDone = async (parmas, url) => {
+  let result = await proxy.Request({
+    url: url,
+    parmas: parmas,
+  });
+  if (!result) return;
+  proxy.Message.success("删除成功");
+  loadDataList();
+};
+// 单个删除
+const delQuestion = (data) => {
+  proxy.Confirm(`确定要删除【${data.title}】吗？`, () => {
+    delQuestionDone({ questionId: data.questionId }, api.delQuestion);
+  });
+};
+// 批量删除
+const delQuestionBatch = () => {
+  proxy.Confirm(`确定要删除这${selectRowList.value.length}条记录吗？`, () => {
+    delQuestionDone(
+      { questionIds: selectRowList.value.join(",") },
+      api.delQuestionBatch
+    );
+  });
+};
+// 发布
+const postQuestionDown = async (questionIds) => {
+  let result = await proxy.Request({
+    url: api.postQuestion,
+    parmas: { questionIds },
+  });
+  if (!result) return;
+  proxy.Message.success("发布成功");
+  loadDataList();
+};
+// 单个发布
+const postQuestion = (data) => {
+  proxy.Confirm(`确定要发布【${data.title}】吗？`, () => {
+    postQuestionDown(data.questionId);
+  });
+};
+// 批量发布
+const postQuestionBatch = () => {
+  proxy.Confirm(`确定要发布这${selectRowList.value.length}条记录吗？`, () => {
+    postQuestionDown(selectRowList.value.join(","));
+  });
+};
+// 取消发布
+const cancelPostQuestion = (data) => {
+  proxy.Confirm(`确定要取消发布【${data.title}】吗？`, async () => {
+    let result = await proxy.Request({
+      url: api.cancelPostQuestion,
+      parmas: { questionIds: data.questionId },
+    });
+    if (!result) return;
+    proxy.Message.success("发布成功");
+    loadDataList();
+  });
 };
 </script>
 
