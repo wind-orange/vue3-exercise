@@ -148,7 +148,7 @@
     </Table>
   </el-card>
   <QuestionEdit ref="questionEditRef" @reload="loadDataList"></QuestionEdit>
-  <importData ref="importDataRef" :type="0" @reload="loadDataList"></importData>
+  <ImportData ref="importDataRef" :type="0" @reload="loadDataList"></ImportData>
 </template>
 
 <script setup>
@@ -156,7 +156,7 @@ import QuestionEdit from "@/components/QuestionEdit.vue";
 import Table from "@/components/Table.vue";
 import CategorySelect from "@/components/content/CategorySelect.vue";
 import Badge from "@/components/Budge.vue";
-import importData from "@/components/content/importData.vue";
+import ImportData from "@/components/content/ImportData.vue";
 import { getCurrentInstance, ref } from "vue";
 
 const { proxy } = getCurrentInstance();

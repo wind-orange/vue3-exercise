@@ -29,12 +29,15 @@
           <span class="iconfont icon-upload"></span>上传
         </el-button>
       </el-upload>
+      <div class="tips">支持xlsx文件</div>
     </div>
   </Dialog>
+  <ImportErrorData ref="importErrorDataRef"></ImportErrorData>
 </template>
 
 <script setup>
 import Dialog from "../Dialog.vue";
+import ImportErrorData from "./ImportErrorData.vue";
 import { getCurrentInstance, ref } from "vue";
 const { proxy } = getCurrentInstance();
 const api = {
@@ -56,14 +59,15 @@ const showImport = () => {
 defineExpose({ showImport });
 
 const emit = defineEmits(["reload"]);
+const importErrorDataRef = ref();
 const importData = async (file) => {
   let result = await proxy.Request({
     url: api[props.type],
-    parmas: { file: file },
+    parmas: { file: file.file },
   });
   if (!result) return;
   if (result.data.length > 0) {
-    proxy.Message.error("数据导入错误");
+    importErrorDataRef.value.showData(result.data);
   } else {
     proxy.Message.success("导入成功");
     dialogConfig.value.show = false;
