@@ -121,6 +121,11 @@
       :selected="selectedHandler"
       @rowSelected="rowSelected"
     >
+      <template #slotTitle="{ index, row }">
+        <span class="a-link" @click="showDetailHandler(row)">
+          {{ row.title }}
+        </span>
+      </template>
       <template #slotDifficultyLevel="{ index, row }">
         <el-rate v-model="row.difficultyLevel" :disabled="true"></el-rate>
       </template>
@@ -174,6 +179,7 @@
   </el-card>
   <QuestionEdit ref="questionEditRef" @reload="loadDataList"></QuestionEdit>
   <ImportData ref="importDataRef" :type="0" @reload="loadDataList"></ImportData>
+  <ShowDetail ref="showDetailRef"></ShowDetail>
 </template>
 
 <script setup>
@@ -182,6 +188,7 @@ import Table from "@/components/Table.vue";
 import CategorySelect from "@/components/content/CategorySelect.vue";
 import Badge from "@/components/Budge.vue";
 import ImportData from "@/components/content/ImportData.vue";
+import ShowDetail from "@/components/content/ShowDetail.vue";
 import { getCurrentInstance, ref } from "vue";
 
 const { proxy } = getCurrentInstance();
@@ -195,6 +202,7 @@ const api = {
 const tableInfoRef = ref();
 const tableOptions = ref({
   selectType: "checkbox",
+  extHeight: 172, // 组件最大高度，防止滚动条
 });
 const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
 // Table字段
@@ -207,7 +215,7 @@ const columns = [
   {
     label: "标题",
     prop: "title",
-    // scopedSlots: "slotTitle",
+    scopedSlots: "slotTitle",
   },
   {
     label: "分类",
@@ -312,6 +320,7 @@ const delQuestionBatch = () => {
     );
   });
 };
+
 // 发布
 const postQuestionDown = async (questionIds) => {
   let result = await proxy.Request({
@@ -334,6 +343,7 @@ const postQuestionBatch = () => {
     postQuestionDown(selectRowList.value.join(","));
   });
 };
+
 // 取消发布
 const cancelPostQuestion = (data) => {
   proxy.Confirm(`确定要取消发布【${data.title}】吗？`, async () => {
@@ -345,6 +355,12 @@ const cancelPostQuestion = (data) => {
     proxy.Message.success("发布成功");
     loadDataList();
   });
+};
+
+// 详情
+const showDetailRef = ref();
+const showDetailHandler = (data) => {
+  showDetailRef.value.showDetail(data.questionId,searchForm.value);
 };
 </script>
 
