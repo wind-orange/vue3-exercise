@@ -21,6 +21,7 @@ import Cover from "./components/Cover.vue";
 import CoverUpload from "./components/CoverUpload.vue";
 import CategorySelect from "./components/content/CategorySelect.vue";
 import SunEditor from "./components/SunEditor.vue";
+import Window from "./components/Window.vue";
 
 const app = createApp(App);
 
@@ -33,6 +34,7 @@ app.component("Cover", Cover);
 app.component("CoverUpload", CoverUpload);
 app.component("CategorySelect", CategorySelect);
 app.component("SunEditor", SunEditor);
+app.component("Window", Window);
 
 app.config.globalProperties.Request = Request;
 app.config.globalProperties.Message = Message;
