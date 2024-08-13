@@ -46,11 +46,13 @@
                 <el-select
                   clearable
                   placeholder="请选择问题类型"
-                  v-model="searchForm.status"
+                  v-model="searchForm.questionType"
                 >
-                  <el-option :value="0" label="判断题"></el-option>
-                  <el-option :value="1" label="单选题"></el-option>
-                  <el-option :value="2" label="多选题"></el-option>
+                  <el-option
+                    :value="item.value"
+                    :label="item.text"
+                    v-for="item in questionTypeList"
+                  ></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -139,6 +141,9 @@
           {{ row.title }}
         </span>
       </template>
+      <template #slotQuestionType="{ index, row }">
+        {{ QUESTION_TYPE[row.questionType] }}
+      </template>
       <template #slotDifficultyLevel="{ index, row }">
         <el-rate v-model="row.difficultyLevel" :disabled="true"></el-rate>
       </template>
@@ -196,21 +201,22 @@
 </template>
 
 <script setup>
+import { QUESTION_TYPE } from "@/utils/Constans";
 import QuestionEdit from "@/components/QuestionEdit.vue";
 import Table from "@/components/Table.vue";
 import CategorySelect from "@/components/content/CategorySelect.vue";
 import Badge from "@/components/Budge.vue";
 import ImportData from "@/components/content/ImportData.vue";
 import ShowDetail from "@/components/content/ShowDetail.vue";
-import { getCurrentInstance, ref } from "vue";
+import { computed, getCurrentInstance, ref } from "vue";
 
 const { proxy } = getCurrentInstance();
 const api = {
-  loadDataList: "/questionInfo/loadDataList",
-  delQuestion: "/questionInfo/delQuestion",
-  delQuestionBatch: "/questionInfo/delQuestionBatch",
-  postQuestion: "/questionInfo/postQuestion",
-  cancelPostQuestion: "/questionInfo/cancelPostQuestion",
+  loadDataList: "/examQuestion/loadDataList",
+  delExamQuestion: "/ExamQuestion/delExamQuestion",
+  delExamQuestionBatch: "/ExamQuestion/delExamQuestionBatch",
+  postExamQuestion: "/ExamQuestion/postExamQuestion",
+  cancelPostExamQuestion: "/ExamQuestion/cancelPostExamQuestion",
 };
 const tableInfoRef = ref();
 const tableOptions = ref({
@@ -242,6 +248,12 @@ const columns = [
     scopedSlots: "slotDifficultyLevel",
   },
   {
+    label: "问题类型",
+    prop: "questionType",
+    width: 130,
+    scopedSlots: "slotQuestionType",
+  },
+  {
     label: "创建人",
     prop: "createUserName",
     width: 150,
@@ -264,6 +276,17 @@ const columns = [
     scopedSlots: "slotOperation",
   },
 ];
+// 把常量从map对象转换成数组
+const questionTypeList = computed(() => {
+  const questionTypeArray = [];
+  for (let item in QUESTION_TYPE) {
+    questionTypeArray.push({
+      value: item,
+      text: QUESTION_TYPE[item],
+    });
+  }
+  return questionTypeArray;
+});
 
 // 用户列表
 const searchForm = ref({});
@@ -373,7 +396,7 @@ const cancelPostQuestion = (data) => {
 // 详情
 const showDetailRef = ref();
 const showDetailHandler = (data) => {
-  showDetailRef.value.showDetail(data.questionId,searchForm.value);
+  showDetailRef.value.showDetail(data.questionId, searchForm.value);
 };
 </script>
 
