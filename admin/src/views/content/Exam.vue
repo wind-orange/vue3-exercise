@@ -195,14 +195,14 @@
       </template>
     </Table>
   </el-card>
-  <QuestionEdit ref="questionEditRef" @reload="loadDataList"></QuestionEdit>
+  <ExamEdit ref="examEditRef" @reload="loadDataList"></ExamEdit>
   <ImportData ref="importDataRef" :type="0" @reload="loadDataList"></ImportData>
   <ShowDetail ref="showDetailRef"></ShowDetail>
 </template>
 
 <script setup>
 import { QUESTION_TYPE } from "@/utils/Constans";
-import QuestionEdit from "@/components/QuestionEdit.vue";
+import ExamEdit from "@/components/ExamEdit.vue";
 import Table from "@/components/Table.vue";
 import CategorySelect from "@/components/content/CategorySelect.vue";
 import Badge from "@/components/Budge.vue";
@@ -308,9 +308,9 @@ const loadDataList = async () => {
 };
 
 // 新增和修改用户
-const questionEditRef = ref();
+const examEditRef = ref();
 const showEdit = (data = {}) => {
-  questionEditRef.value.showEdit(Object.assign({}, data));
+  examEditRef.value.showEdit(Object.assign({}, data));
 };
 
 // 批量导入
