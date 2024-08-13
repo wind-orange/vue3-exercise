@@ -218,6 +218,11 @@ const submitForm = async () => {
     if (!valid) return;
     let parmas = {};
     Object.assign(parmas, formData.value);
+    // 选项重复校验
+    if (isRepeat(parmas.questionItemList)) {
+      proxy.Message.warning("选项重复");
+      return;
+    }
     // 提交时转换后台对应数据格式
     if (parmas.questionType == 2) {
       parmas.questionAnswer = parmas.questionAnswer.sort().join(",");
@@ -237,6 +242,18 @@ const submitForm = async () => {
     proxy.Message.success("保存成功");
     emit("reload");
   });
+};
+
+// 选项重复校验方法
+const isRepeat = (arr) => {
+  let tempMap = {};
+  for (let i in arr) {
+    if (tempMap[arr[i].title]) {
+      return true;
+    }
+    tempMap[arr[i].title] = true;
+  }
+  return false;
 };
 </script>
 
