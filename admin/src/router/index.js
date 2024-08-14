@@ -28,6 +28,10 @@ const router = createRouter({
         name:'考题管理',
         component: () => import('../views/content/Exam.vue')
       },{
+        path:'/content/share',
+        name:'经验分享',
+        component: () => import('../views/content/Share.vue')
+      },{
         path:'/setting/menu',
         name:'菜单管理',
         component: () => import('../views/settings/Menu.vue')
