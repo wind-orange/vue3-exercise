@@ -196,7 +196,7 @@
     </Table>
   </el-card>
   <ExamEdit ref="examEditRef" @reload="loadDataList"></ExamEdit>
-  <ImportData ref="importDataRef" :type="0" @reload="loadDataList"></ImportData>
+  <ImportData ref="importDataRef" :type="1" @reload="loadDataList"></ImportData>
   <ShowDetail ref="showDetailRef"></ShowDetail>
 </template>
 
@@ -213,10 +213,10 @@ import { computed, getCurrentInstance, ref } from "vue";
 const { proxy } = getCurrentInstance();
 const api = {
   loadDataList: "/examQuestion/loadDataList",
-  delExamQuestion: "/ExamQuestion/delExamQuestion",
-  delExamQuestionBatch: "/ExamQuestion/delExamQuestionBatch",
-  postExamQuestion: "/ExamQuestion/postExamQuestion",
-  cancelPostExamQuestion: "/ExamQuestion/cancelPostExamQuestion",
+  delExamQuestion: "/examQuestion/delExamQuestion",
+  delExamQuestionBatch: "/examQuestion/delExamQuestionBatch",
+  postExamQuestion: "/examQuestion/postExamQuestion",
+  cancelPostExamQuestion: "/examQuestion/cancelPostExamQuestion",
 };
 const tableInfoRef = ref();
 const tableOptions = ref({
@@ -344,7 +344,7 @@ const delQuestionDone = async (parmas, url) => {
 // 单个删除
 const delQuestion = (data) => {
   proxy.Confirm(`确定要删除【${data.title}】吗？`, () => {
-    delQuestionDone({ questionId: data.questionId }, api.delQuestion);
+    delQuestionDone({ questionId: data.questionId }, api.delExamQuestion);
   });
 };
 // 批量删除
@@ -352,7 +352,7 @@ const delQuestionBatch = () => {
   proxy.Confirm(`确定要删除这${selectRowList.value.length}条记录吗？`, () => {
     delQuestionDone(
       { questionIds: selectRowList.value.join(",") },
-      api.delQuestionBatch
+      api.delExamQuestionBatch
     );
   });
 };
@@ -360,7 +360,7 @@ const delQuestionBatch = () => {
 // 发布
 const postQuestionDown = async (questionIds) => {
   let result = await proxy.Request({
-    url: api.postQuestion,
+    url: api.postExamQuestion,
     parmas: { questionIds },
   });
   if (!result) return;
@@ -384,7 +384,7 @@ const postQuestionBatch = () => {
 const cancelPostQuestion = (data) => {
   proxy.Confirm(`确定要取消发布【${data.title}】吗？`, async () => {
     let result = await proxy.Request({
-      url: api.cancelPostQuestion,
+      url: api.cancelPostExamQuestion,
       parmas: { questionIds: data.questionId },
     });
     if (!result) return;
