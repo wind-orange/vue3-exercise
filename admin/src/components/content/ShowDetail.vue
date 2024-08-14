@@ -21,6 +21,23 @@
             class="html-content"
             v-html="detailInfo.question || '暂无问题描述'"
           ></div>
+          <!-- 考题管理：题目选项 -->
+          <template v-if="props.showType == 2">
+            <div class="part-title">
+              题目类型：{{ QUESTION_TYPE[detailInfo.questionType] }}
+            </div>
+            <template v-if="detailInfo.questionType != 0">
+              <div class="part-title">问题选项：</div>
+              <div class="question-item-list">
+                <div
+                  class="question-item"
+                  v-for="(item, index) in detailInfo.questionItemList"
+                >
+                  {{ LETTER[index] }}、{{ item.title }}
+                </div>
+              </div>
+            </template>
+          </template>
           <div class="part-title">答案解析：</div>
           <div class="html-content" v-html="detailInfo.answerAnalysis"></div>
         </div>
@@ -31,6 +48,7 @@
 </template>
 
 <script setup>
+import { LETTER, QUESTION_TYPE } from "@/utils/Constans";
 import Window from "../Window.vue";
 import { getCurrentInstance, ref } from "vue";
 const { proxy } = getCurrentInstance();

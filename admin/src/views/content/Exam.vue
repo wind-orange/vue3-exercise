@@ -197,7 +197,7 @@
   </el-card>
   <ExamEdit ref="examEditRef" @reload="loadDataList"></ExamEdit>
   <ImportData ref="importDataRef" :type="1" @reload="loadDataList"></ImportData>
-  <ShowDetail ref="showDetailRef"></ShowDetail>
+  <ShowDetail ref="showDetailRef" :showType="2"></ShowDetail>
 </template>
 
 <script setup>
