@@ -31,6 +31,7 @@
           <el-form-item label="问题类型" prop="questionType">
             <el-radio-group
               v-model="formData.questionType"
+              :disabled="formData.questionId != null"
               @change="resetAnswer"
             >
               <el-radio :value="item.value" v-for="item in questionTypeList">
@@ -130,6 +131,7 @@ import Dialog from "./Dialog.vue";
 import CategorySelect from "@/components/content/CategorySelect.vue";
 import SunEditor from "@/components/SunEditor.vue";
 import { LETTER, QUESTION_TYPE } from "@/utils/Constans";
+import { formEmits } from "element-plus";
 import { ref, getCurrentInstance, nextTick, computed } from "vue";
 const { proxy } = getCurrentInstance();
 const api = {
@@ -182,16 +184,36 @@ const rules = {
   questionAnswer: [{ required: true, message: "请选择答案" }],
   answerAnalysis: [{ required: true, message: "请输入答案解析" }],
 };
+
+// 修改-获取数据
+const loadQuestionItem = async (questionId) => {
+  let result = await proxy.Request({
+    url: api.loadQuestionItem,
+    parmas: { questionId: questionId },
+  });
+  if (!result) return;
+  formData.value.questionItemList = result.data;
+};
+
 // 对外方法
 const showEdit = (data) => {
   dialogConfig.value.show = true;
   nextTick(() => {
     formDataRef.value.resetFields();
     formData.value = Object.assign({}, data);
-    //
+    //?
     if (formData.value.questionItemList == null) {
       formData.value.questionItemList = [{ title: "", sort: 1 }];
     }
+    // 多选：转换数据类型[string->arr]
+    if (formData.value.questionType == 2) {
+      formData.value.questionAnswer = formData.value.questionAnswer.split(",");
+    }
+    // 如果有id=修改功能->获取数据
+    if (formData.value.questionId) {
+      loadQuestionItem(formData.value.questionId);
+    }
+    currentQuestionType.value = formData.value.questionType;
   });
 };
 defineExpose({ showEdit });
@@ -214,6 +236,29 @@ const reduceQuestionItem = (index) => {
 const emit = defineEmits(["reload"]);
 // 表单提交
 const submitForm = async () => {
+  // 校验前判断答案选项是否被删除并处理
+  if (formData.value.questionAnswer && formData.value.questionType != 0) {
+    let questionAnswerArray = [];
+    if (formData.value.questionAnswer instanceof Array) {
+      questionAnswerArray = formData.value.questionAnswer;
+    } else {
+      questionAnswerArray = formData.value.questionAnswer.split(",");
+    }
+    questionAnswerArray.forEach((element, index) => {
+      if (
+        formData.value.questionItemList.length - 1 <
+        Number.parseInt(element)
+      ) {
+        if (formData.value.questionType == 1) {
+          formData.value.questionAnswer = null;
+        }
+        if (formData.value.questionType == 2) {
+          formData.value.questionAnswer.splice(index, 1);
+        }
+      }
+    });
+  }
+  // 表单校验
   formDataRef.value.validate(async (valid) => {
     if (!valid) return;
     let parmas = {};
