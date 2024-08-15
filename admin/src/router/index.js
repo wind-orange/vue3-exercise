@@ -32,6 +32,10 @@ const router = createRouter({
         name:'经验分享',
         component: () => import('../views/content/Share.vue')
       },{
+        path:'/app/userDevice',
+        name:'经验分享',
+        component: () => import('../views/app/userDevice.vue')
+      },{
         path:'/setting/menu',
         name:'菜单管理',
         component: () => import('../views/settings/Menu.vue')
