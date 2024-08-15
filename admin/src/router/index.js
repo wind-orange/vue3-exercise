@@ -40,6 +40,10 @@ const router = createRouter({
         name:'用户管理',
         component: () => import('../views/app/User.vue')
       },{
+        path:'/app/carouselList',
+        name:'用户管理',
+        component: () => import('../views/app/Carousel.vue')
+      },{
         path:'/setting/menu',
         name:'菜单管理',
         component: () => import('../views/settings/Menu.vue')
