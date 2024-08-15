@@ -30,10 +30,10 @@ const PermissionCode = {
     del_batch: "exam_question_del_batch",
   },
   share: {
-    edit: "share_share",
+    edit: "share_edit",
     post: "share_post",
     del: "share_del",
-    del_batch: "share_del_batch",
+    del_batch: "question_del_batch",
   },
   app: {
     app_update_edit: "app_update_edit",

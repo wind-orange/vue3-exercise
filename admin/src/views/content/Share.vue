@@ -50,7 +50,7 @@
                 plain
                 @click="showEdit()"
                 v-has="proxy.PermissionCode.share.edit"
-                >新增问题</el-button
+                >新增分享</el-button
               >
               <el-button
                 type="warning"
@@ -64,7 +64,7 @@
                 type="danger"
                 plain
                 @click="delQuestionBatch"
-                v-has="proxy.PermissionCode.share.del_batch"
+              
                 :disabled="selectRowList.length == 0"
                 >批量删除</el-button
               >
@@ -125,7 +125,7 @@
             class="a-link"
             href="javascript:void(0)"
             @click="showEdit(row)"
-            v-has="proxy.PermissionCode.question.edit"
+            v-has="proxy.PermissionCode.share.edit"
             v-if="
               row.status == 0 &&
               (row.createUserId == userInfo.userId || userInfo.superAdmin)
@@ -136,7 +136,7 @@
             class="a-link"
             href="javascript:void(0)"
             @click="delQuestion(row)"
-            v-has="proxy.PermissionCode.question.del"
+            v-has="proxy.PermissionCode.share.del"
             v-if="
               row.status == 0 &&
               (row.createUserId == userInfo.userId || userInfo.superAdmin)
@@ -147,7 +147,7 @@
             class="a-link"
             href="javascript:void(0)"
             @click="postQuestion(row)"
-            v-has="proxy.PermissionCode.question.post"
+            v-has="proxy.PermissionCode.share.post"
             v-if="row.status == 0"
             >发布
           </a>
@@ -155,7 +155,7 @@
             class="a-link"
             href="javascript:void(0)"
             @click="cancelPostQuestion(row)"
-            v-has="proxy.PermissionCode.question.post"
+            v-has="proxy.PermissionCode.share.post"
             v-if="row.status == 1"
             >取消发布
           </a>
@@ -163,7 +163,7 @@
       </template>
     </Table>
   </el-card>
-  <ShareEdit ref="sahreEditRef" @reload="loadDataList"></ShareEdit>
+  <ShareEdit ref="shareEditRef" @reload="loadDataList"></ShareEdit>
 </template>
 
 <script setup>
@@ -249,9 +249,9 @@ const loadDataList = async () => {
 };
 
 // 新增和修改用户
-const sahreEditRef = ref();
+const shareEditRef = ref();
 const showEdit = (data = {}) => {
-  sahreEditRef.value.showEdit(Object.assign({}, data));
+  shareEditRef.value.showEdit(Object.assign({}, data));
 };
 
 // 可以选中的条件
@@ -279,7 +279,7 @@ const delQuestionDone = async (parmas, url) => {
 // 单个删除
 const delQuestion = (data) => {
   proxy.Confirm(`确定要删除【${data.title}】吗？`, () => {
-    delQuestionDone({ shareId: data.shareId }, api.delShare);
+    delQuestionDone({ shareIds: data.shareId }, api.delShare);
   });
 };
 // 批量删除
