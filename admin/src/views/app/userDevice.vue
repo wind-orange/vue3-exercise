@@ -4,7 +4,7 @@
     <el-card>
       <el-form :model="searchForm" label-width="70px" label-position="right">
         <el-row>
-          <el-col :span="6">
+          <el-col :span="5">
             <el-form-item label="加入日期" label-width="70px">
               <el-date-picker
                 v-model="searchForm.createTimeRange"
@@ -16,8 +16,8 @@
               ></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="7">
-            <el-form-item label="最近使用日期" label-width="110px">
+          <el-col :span="5">
+            <el-form-item label="最近使用日期" label-width="100px">
               <el-date-picker
                 v-model="searchForm.lastTimeRange"
                 type="daterange"
@@ -28,7 +28,7 @@
               ></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="4">
             <el-form-item label="创建人">
               <el-input
                 class="password-input"
@@ -39,8 +39,28 @@
               ></el-input>
             </el-form-item>
           </el-col>
+          <el-col :span="4">
+            <el-form-item label="品牌" label-width="60px">
+              <el-input
+                v-model="searchForm.deviceBrandFuzzy"
+                clearable
+                placeholder="支持模糊搜索"
+                @keyup.enter="loadDataList"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="设备ID" label-width="60px">
+              <el-input
+                v-model="searchForm.lastUseDeviceId"
+                clearable
+                placeholder="支持模糊搜索"
+                @keyup.enter="loadDataList"
+              ></el-input>
+            </el-form-item>
+          </el-col>
           <!-- btn -->
-          <el-col :span="4" :style="{ paddingLeft: '20px' }">
+          <el-col :span="2" :style="{ paddingLeft: '20px' }">
             <el-button type="success" plain @click="loadDataList"
               >查询
             </el-button>
@@ -59,26 +79,6 @@
       :options="tableOptions"
       :extHeight="tableOptions.extHeight"
     >
-      <el-col :span="5">
-        <el-form-item label="品牌" label-width="40px">
-          <el-input
-            v-model="searchForm.deviceBrandFuzzy"
-            clearable
-            palceholder="支持模糊搜索"
-            @keyup.enter="loadDataList"
-          ></el-input>
-        </el-form-item>
-      </el-col>
-      <el-col :span="5">
-        <el-form-item label="设备ID" label-width="40px">
-          <el-input
-            v-model="searchForm.lastUseDeviceId"
-            clearable
-            palceholder="支持模糊搜索"
-            @keyup.enter="loadDataList"
-          ></el-input>
-        </el-form-item>
-      </el-col>
     </Table>
   </el-card>
 </template>
