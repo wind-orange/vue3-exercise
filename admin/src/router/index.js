@@ -33,8 +33,12 @@ const router = createRouter({
         component: () => import('../views/content/Share.vue')
       },{
         path:'/app/userDevice',
-        name:'经验分享',
+        name:'设备管理',
         component: () => import('../views/app/userDevice.vue')
+      },{
+        path:'/app/user',
+        name:'用户管理',
+        component: () => import('../views/app/User.vue')
       },{
         path:'/setting/menu',
         name:'菜单管理',
@@ -45,7 +49,7 @@ const router = createRouter({
         component:()=> import('../views/settings/Role.vue')
       },{
         path:'/setting/user',
-        name:'用户管理',
+        name:'系统用户',
         component:()=> import('../views/settings/User.vue')
       }]
     }
