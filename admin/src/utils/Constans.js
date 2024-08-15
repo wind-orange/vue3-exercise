@@ -34,4 +34,11 @@ const QUESTION_TYPE = {
   2: "多选题",
 };
 
-export { LETTER, QUESTION_TYPE };
+const OBJECT_TYPE_MAP = {
+  0: "分享",
+  1: "八股文",
+  2: "考题",
+  3: "外部链接",
+};
+
+export { LETTER, QUESTION_TYPE, OBJECT_TYPE_MAP };
