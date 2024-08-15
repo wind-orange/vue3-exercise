@@ -8,16 +8,13 @@
           type="primary"
           @click="showEdit()"
           v-has="proxy.PermissionCode.category.edit"
-          >新增分类
+          >新增轮播图
         </el-button>
       </el-form>
     </el-card>
   </div>
   <!-- 下方content -->
   <el-card class="table-data-card">
-    <template #header>
-      <span>角色列表</span>
-    </template>
     <Table
       ref="tableInfoRef"
       :columns="columns"
@@ -73,13 +70,13 @@
       </template>
     </Table>
   </el-card>
-  <CategoryEdit ref="categoryEditRef" @reload="loadDataList"></CategoryEdit>
+  <CarouselEdit ref="CarouselEditRef" @reload="loadDataList"></CarouselEdit>
 </template>
 
 <script setup>
 import { OBJECT_TYPE_MAP } from "@/utils/Constans";
 import Table from "@/components/Table.vue";
-import CategoryEdit from "@/components/CategoryEdit.vue";
+import CarouselEdit from "@/components/CarouselEdit.vue";
 import Cover from "@/components/Cover.vue";
 import { getCurrentInstance, ref } from "vue";
 
@@ -92,7 +89,7 @@ const api = {
 };
 const tableInfoRef = ref();
 const tableOptions = ref({
-  extHeight: 125,
+  extHeight: 85,
 });
 // Table字段
 const columns = [
@@ -108,7 +105,7 @@ const columns = [
     scopedSlots: "slotObjectType",
   },
   {
-    label: "主体ID/连接",
+    label: "主体ID/链接",
     prop: "object",
     scopedSlots: "slotObject",
   },
@@ -132,7 +129,7 @@ const loadDataList = async () => {
 
 // 删除用户
 const delCarousel = (data) => {
-  proxy.Confirm(`确定要删除【${data.categoryName}】吗？`, async () => {
+  proxy.Confirm(`确定要删除吗？`, async () => {
     let result = await proxy.Request({
       url: api.delCarousel,
       parmas: { carouselId: data.carouselId },
@@ -170,9 +167,9 @@ const changeSort = async (index, type) => {
 };
 
 // 新增分类、修改
-const categoryEditRef = ref();
+const CarouselEditRef = ref();
 const showEdit = (data = {}) => {
-  categoryEditRef.value.showEdit(Object.assign({}, data));
+  CarouselEditRef.value.showEdit(Object.assign({}, data));
 };
 </script>
 
